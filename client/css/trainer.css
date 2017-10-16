@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css?family=Asap+Condensed');
+
+.main {
+    background-image: url("/images/back4.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.background-tint {
+    background-color: rgba(0,0,0,.8);
+    background-blend-mode: multiply;
+}
+
+
+.brand-light {
+    font-size: 48px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.sign-title {
+    margin-bottom: 30px;
+    text-align: left;
+    color: white;
+}
+
+.form-control {
+    background: rgba(0,0,0,0);
+    width: 300;
+    position: relative;
+    font-size: 18px;
+    color: white;
+    height: auto;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Disable Form borders except for bottom */
+input[type="text"] {
+border-radius: 0;
+border-top: none;
+border-right: none;
+border-left: none;
+box-shadow: none;
+}
+
+input[type="email"] {
+border-radius: 0;
+border-top: none;
+border-right: none;
+border-left: none;
+box-shadow: none;
+}
+
+input[type="password"] {
+margin-bottom: 20px;
+border-radius: 0;
+border-top: none;
+border-right: none;
+border-left: none;
+box-shadow: none;
+}
+
+select{
+    -webkit-appearance:none;
+    background-color: black;
+    border-radius: 0 !important;
+    color: #19E9B1 !important;
+}
+
+/* Overrides Bootstrap Default Font Glow */
+#bootstrap-overrides select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="url"]:focus, textarea:focus{
+    border-color: aqua;
+    box-shadow: none;
+    outline: 0 none;
+}
+
+/* Changes Form Placeholder Font Color */
+.form-control::-webkit-input-placeholder { 
+    color: #19E9B1; 
+}  /* WebKit, Blink, Edge */
+.form-control:-moz-placeholder { 
+    color: #19E9B1;
+}  /* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder { 
+    color: #19E9B1;
+}  /* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder { 
+    color: #19E9B1;
+}  /* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder { 
+    color: #19E9B1;
+}  /* Microsoft Edge */
+
+.btn {
+    font-family: 'Asap Condensed', sans-serif;
+    font-size: 16px;
+    border-radius: 17px;
+    width: 250px;
+    margin: auto;
+    margin-top: 35px;
+    margin-bottom: 40px;
+    height: 40px;
+    display: block;
+    background-color: transparent;
+    border-color: lightskyblue;
+    color: lightskyblue;
+}
+
+.btn-primary-outline:hover, .btn-primary-outline:focus {
+    color: wheat;
+    border-color: wheat;
+}
+
+/* Disables Autofill Color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition-delay: 9999s;
+    -webkit-transition: color 9999s ease-out, background-color 9999s ease-out;
+}

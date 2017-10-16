@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css?family=Asap+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700');
+
+.main {
+    background-image: url("/images/back1.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.background-tint {
+    background-color: rgba(0,00,255,.8);
+    background-blend-mode: multiply;
+  }
+
+
+.brand-light {
+    font-size: 72px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 70px;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.in-middle{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 100vh;
+  }
+
+#email, #password, #name, #country, #inputPassword, #inputPasswordConfirm{
+    border-radius: 0;
+}
+
+.btn {
+    font-family: 'Asap Condensed', sans-serif;
+    border-radius: 17px;
+    width: 250px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+    background-color: transparent;
+    border-color: #FFF7BB;
+    color: #FFF7BB;
+}
+
+.btn-primary-outline:hover, .btn-primary-outline:focus {
+    color: #FFF7BB;
+    border-color: lightskyblue;
+}
+
+.btn-success-outline{
+    border-color: #FFF7BB;
+    color: #FFF7BB;
+}
+
+.btn-info-outline{
+    border-color: #FFF7BB;
+    color: #FFF7BB;
+}
+
+.btn-success-outline:hover, .btn-success-outline:focus, .btn-info-outline:hover, .btn-info-outline:focus {
+    color: #FFF7BB;
+    border-color: lightskyblue;
+}
+
+a {
+    color:#FFF7BB;
+}
+
+a:visited {
+    color: yellow;
+}
+
+a:hover{
+    text-decoration: none;
+    color: lightskyblue;
+}

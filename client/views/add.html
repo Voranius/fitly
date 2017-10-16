@@ -1,0 +1,125 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <div class="navbar-header nav navbar-nav navbar-left">
+            <h3>Welcome, Super Admin</h3>
+        </div>
+
+    </div>
+</nav>
+    
+<div>
+    <h4 class="sah4">Add Trainer</h4>
+</div>
+
+<div class="col-sm-2 col-lg-4"></div>
+<div class="col-sm-8 col-lg-4">
+<form name="addUserForm" ng-submit="addCtrl.addUser()">
+    <div class="form-group">
+        <input class="form-control" id="email" name="email" type="email" placeholder="Email" required ng-model="addCtrl.user.email"/>
+    </div>
+
+    <div class="form-group">
+        <input type="password" data-minlength="4" class="form-control" id="inputPassword" placeholder="Password must be at least 4 characters long" required ng-model="addCtrl.user.password">
+    </div>
+
+    <div class="form-group">
+        <div>
+            <input class="form-control" id="name" name="firstname" type="text" placeholder="First Name" required ng-model="addCtrl.user.firstname"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div>
+            <input class="form-control" id="name" name="lastname" type="text" placeholder="Last Name" required ng-model="addCtrl.user.lastname"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <select class="form-control" id="role" required ng-model="addCtrl.user.role" ng-init="addCtrl.user.role = null">
+                    <option ng-value="null" hidden>Role</option>
+                    <option ng-value="1">Trainer</option>
+                    <option ng-value="2">Client</option>
+                    <option ng-value="0">Admin</option>
+            </select>
+    </div>
+
+    <label>Qualifications</label>
+    <div class="form-group">
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                   name="qualifications"
+                   ng-model="addCtrl.user.qualify.F001">
+                   Crossfit
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F002">
+                    MMA
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F003">
+                    Core
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F004">
+                    Weights
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F005">
+                    Spinning
+        </label>
+        <br>
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F006">
+                    Aerobics
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F007">
+                    Boxing
+        </label>
+
+        <label class='checkbox-inline'>
+            <input type='checkbox'
+                    name="qualifications"
+                    ng-model="addCtrl.user.qualify.F008">
+                    Barre
+        </label>
+    </div>
+
+    <div class="form-group">
+        <select class="form-control" id="status" required ng-model="addCtrl.user.status" ng-init="addCtrl.user.status = null">
+                        <option ng-value="null" hidden>Status</option>
+                        <option ng-value="0">Active</option>
+                        <option ng-value="1">Unavailable</option>
+                        <option ng-value="2">Inactive</option>
+                </select>
+    </div>
+
+
+    <div>
+        <button type="submit" class="btn btn-block btn-success add-new">Add New Trainer</button>
+        <button type="button" class="btn btn-block btn-danger" ui-sref="list">Cancel</button>
+        <button type="button" class="btn btn-block btn-info" ng-show="addCtrl.message" ng-click="addCtrl.addAnother()">Add Another</button>
+        
+    </div>
+</form>
+<div ng-show="addCtrl.message">{{ addCtrl.message }}</div>
+
+</div>

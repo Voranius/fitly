@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css?family=Kameron');
+
+body {
+    background-color: rgb(240, 240, 240);
+    font-weight: bold; 
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.main {
+    background: linear-gradient(
+        rgba(20,20,20, .3), 
+        rgba(20,20,20, .3));
+    background-image: url("/images/back1.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+.background-tint {
+    background-color: rgba(20,20,20,.5);
+    background-blend-mode: multiply;
+  }
+
+.brand {
+    font-size: 60px;
+    font-family: 'Kameron', serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.brand-light {
+    font-size: 60px;
+    font-family: 'Kameron', serif;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    color: white;
+}
+
+#email, #password, #name, #country, #inputPassword, #inputPasswordConfirm{
+    border-radius: 0;
+}
+
+.btn {
+    border-radius: 0;
+}
+
+.input-group-addon{
+    border-radius: 0px !important;
+}
+
+.checkbox {
+    margin-top: 30px;
+    margin-left: 16px;
+    display: inline-block;
+}
+
+.sign-in {
+    margin-top: 25px;
+    margin-right: 16px;
+    display: inline-block;
+}
+
+.forgot {
+    padding-top: 100px;
+    margin-top: 25px;
+    margin-left: 16px;
+    float: left;
+}
+
+.accsign {
+    padding-top: 100px;
+    margin-top: 25px;
+    margin-right: 16px;
+    float: right;
+}
+
+.sign-up{
+    margin-top: 40px;
+}
+
+.form-control::-webkit-input-placeholder { 
+    color: lightslategray; 
+    font-weight: bold;
+}  /* WebKit, Blink, Edge */
+.form-control:-moz-placeholder { 
+    color: lightslategray; 
+    font-weight: bold;
+}  /* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder { 
+    color: lightslategray; 
+    font-weight: bold;
+}  /* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder { 
+    color: lightslategray; 
+    font-weight: bold;
+}  /* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder { 
+    color: lightslategray; 
+    font-weight: bold;
+}  /* Microsoft Edge */
+
+select{
+    -webkit-appearance:none;
+}
+
+select, #header{
+    font-weight: bold;
+    color: lightslategray;
+}
+
+.selection {
+    margin-bottom: 20px;
+}
+
+.sign-title {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+h3 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+h4 {
+    text-align: center;
+}

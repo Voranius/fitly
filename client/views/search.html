@@ -1,0 +1,66 @@
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+
+                <div class="navbar-header nav navbar-nav navbar-left">
+                        <h3>Welcome, Super Admin</h3>
+                </div>
+
+                <div class="navbar-header nav navbar-nav navbar-right">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                        <i class="glyphicon glyphicon-align-center"></i>
+                    </button>
+                </div>
+
+            </div>
+        </nav>
+
+        <div>
+        <h4 class="sah4">Superadmin Panel</h4>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                    <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                            <input id="userName" type="text" class="form-control input-lg" 
+                            name="userName"
+                            ng-model = "searchCtrl.queryString"
+                            size="8"
+                            placeholder="Search for a user" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-info btn-lg" type="button">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+
+        <div class="table table-responsive">
+            <div class="row custyle">
+            <table class="table table-striped custab">
+            <thead>
+            <a href="#" class="btn btn-primary btn-xs addnew pull-right"><span class="glyphicon glyphicon-plus-sign"></span> Add a New Trainer</a> 
+                <tr>
+                    <!-- <th>User ID</th> -->
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <!-- <th>Category</th> -->
+                    <!-- <th>Address</th> -->
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+                <tr ng-repeat="user in searchCtrl.users">
+                    <!-- <td>{{ user.uid }}</td> -->
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                    <!-- <td>{{ user.Address }}</td> -->
+                    <td class="text-center"><a class='btn btn-success btn-xs' href="#"><span class="glyphicon glyphicon-eye-open"></span> View</a> <a class='btn btn-info btn-xs' href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a> <a href="#" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span> Delete</a></td>
+                </tr>
+            </table>
+            </div>
+        </div>

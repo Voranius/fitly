@@ -1,0 +1,84 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <div class="navbar-header nav navbar-nav navbar-left">
+            <h3>Welcome, Super Admin</h3>
+        </div>
+
+    </div>
+</nav>
+
+<div class="container-fluid profile">
+    <h3 class="profile-header">Edit Profile</h3>
+    <hr>
+    <div class="row">
+        <!-- left column -->
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="text-center">
+                <img src="http://lorempixel.com/200/200/people/9/" class="avatar img-circle img-thumbnail" alt="avatar">
+                <!-- <h6>Upload a different photo...</h6>
+                <input type="file" class="text-center center-block well well-sm"> -->
+            </div>
+        </div>
+        <!-- edit form column -->
+        <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+            <h3>Personal info</h3>
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                        <label class="col-lg-3 control-label">User ID:</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" type="text" readonly ng-model="viewCtrl.user.uid">
+                        </div>
+                </div>  
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Email:</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="email" readonly ng-model="viewCtrl.user.email">
+                    </div>
+                </div>                            
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">First name:</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="text" ng-model="viewCtrl.user.firstname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-3 control-label">Last name:</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="text"  ng-model="viewCtrl.user.lastname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label">Status:</label>
+                    <div class="col-md-8">
+                        <select class="form-control" id="status" required ng-model="viewCtrl.user.status">
+                            <option id="header" ng-value="null">Choose One</option>
+                            <option ng-value="0">Active</option>
+                            <option ng-value="1">Unavailable</option>
+                            <option ng-value="2">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label class="col-md-3 control-label">Qualifications:</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text"  ng-model="viewCtrl.user.qualifications">
+                    </div>
+                </div> -->
+                <div class="form-group">
+                    <label class="col-md-3 control-label"></label>
+                    <div class="col-md-8">
+                            <!-- <a class='btn btn-success btn-xs' href="#" ng-click="listCtrl.saveUser()"> Save</a> -->
+                            <button type="button" class='btn btn-success btn-xs' ng-click="viewCtrl.saveUser()">Save</button>
+                            <a class='btn btn-info btn-xs' ui-sref="list"> Cancel</a>
+                            <button type="button" class="btn btn-danger btn-xs" ng-click="viewCtrl.deleteUser()">Delete</button>
+                            
+                            <!-- <a class="btn btn-danger btn-xs" href="#"  ng-click="listCtrl.deleteUser()"> Delete</a></td> -->
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div ng-show="viewCtrl.message">{{ viewCtrl.message }}</div>
+    </div>
+</div>
