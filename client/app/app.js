@@ -76,7 +76,7 @@
             console.log("User details to update: ", userToUpdate);
             return $http({
                 method: 'PUT',
-                url: 'api/users/' + userToUpdate.uid,
+                url: 'api/users/' + userToUpdate.id,
                 data: {user: userToUpdate}
             });
         };
@@ -316,7 +316,7 @@
         };
 
         viewCtrl.deleteUser = function() {
-            UserSvc.deleteUser(viewCtrl.user.uid)
+            UserSvc.deleteUser(viewCtrl.user.id)
                 .then(function (result) {
                     // a browser box to inform the user, before switching states
                     alert("User successfully removed");

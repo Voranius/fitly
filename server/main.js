@@ -30,16 +30,18 @@
 
 const express = require('express');
 const path = require('path');
-const $q = require('q');
-// database requirements & dependencies
 const bodyParser = require('body-parser');
+// const $q = require('q');
+
+// database requirements & dependencies
 const sequelize = require('sequelize'); // npm install sequelize and mysql2
+
 // authentication requirements & dependencies
 const session = require('express-session'); // for session management
 const passport = require('passport'); //  authentication
 const LocalStrategy = require('passport-local').Strategy;
-// var FacebookStrategy = require('passport-facebook').Strategy;
 const bcrypt = require('bcryptjs');
+// var FacebookStrategy = require('passport-facebook').Strategy;
 
 const app = express();
 
@@ -47,7 +49,7 @@ const app = express();
 const MYSQL_USERNAME = 'fred';
 const MYSQL_PASSWORD = 'fred';
 var fitnessDb = new sequelize(
-    'fitness',        // database name
+    'fitlydb',        // database name
     MYSQL_USERNAME, // login ID
     MYSQL_PASSWORD, // login password
     {
@@ -63,16 +65,18 @@ var fitnessDb = new sequelize(
 );
 
 // load tables required: User, Qualification and to link both, Userqualify
-var User = require('./models/users')(fitnessDb, sequelize);
-var Qualification = require('./models/qualifications')(fitnessDb, sequelize);
-var Userqualify = require('./models/userqualify')(fitnessDb, sequelize);
+var Person = require('./models/person')(fitnessDb, sequelize);
+var Class = require('./models/class')(fitnessDb, sequelize);
+var Transaction = require('./models/transaction')(fitnessDb, sequelize);
 
 // A User has a few qualifications, tracked in Userqualify under 'user_id'
-// This is linked via 'uid' in User
-User.hasMany(Userqualify, {foreignKey: 'user_id'});
+// This is linked via 'id' in User
+Person.hasMany(Transaction);
+Person.hasMany(Class);
+Class.hasMany(Transaction);
 // Userqualify exists solely to match to Qualifications
 // It uses 'qualify_id' to point to correspoding 'qid' in Qualification
-Userqualify.belongsTo(Qualification, {foreignKey: 'qualify_id'});
+// Userqualify.belongsTo(Qualification, {foreignKey: 'qualify_id'});
 
 // Section to implement authentication strategies and to manage lifecycle of those strategies
 // For our Fitly app, we'll start with passport-local
@@ -86,7 +90,7 @@ function authenticateUser(username, password, done) {
     console.log('Whoami: ', username);
 
     // locate user in database based on supplied email address
-    User.findOne({
+    Person.findOne({
         where: {
             email: username
         }
@@ -129,8 +133,8 @@ passport.serializeUser(function(user, done) {
     console.log('2. In serializeUser');
     console.log('Whoami: ', user.dataValues.email);
 
-    // passing user.uid out for deserializer to search database by ID
-    done(null, user.dataValues.uid);
+    // passing user.id out for deserializer to search database by ID
+    done(null, user.dataValues.id);
 });
 
 // deserializer follows by using the id being passed in to confirm user exists in db
@@ -138,8 +142,8 @@ passport.deserializeUser(function(userId, done) {
     console.log('3. In deserializeUser');
     console.log('Whoami: ', userId);
 
-    User.findById(userId, {
-        attributes: ['uid', 'firstname', 'lastname', 'email']
+    Person.findById(userId, {
+        attributes: ['id', 'firstname', 'lastname', 'email']
     })
         .then(function(user) {
             if (user) {
@@ -172,170 +176,44 @@ app.post("/api/users", function (req, res) {
     
     console.log("value of req.body", req.body);
     
-    // SAMPLE FROM SEQUELIZE DOCUMENTATION
-    // fitnessDb.transaction()
-
-    //     .then(function(t) {
-    //         return User.create({
-    //             firstName: 'Homer',
-    //             lastName: 'Simpson'
-    //         },
-    //         {transaction: t})
-            
-    //         .then(function(user) {
-    //             return User.addSibling({
-    //                 firstName: 'Lisa',
-    //                 lastName: 'Simpson'
-    //             },
-    //             {transaction: t});
-    //         })
-
-    //             .then(function() {
-    //                 return t.commit();
-    //             }).catch(function(err) {
-    //                 return t.rollback();
-    //             });
-    //   });
-
-    // version 3 - using sequelize's transaction, because we have to update 3 tables in fitnessDb
-    fitnessDb.transaction()
-        // start an unmanaged sequelize transaction
-        // by calling sequelize.transaction() without a callback
-        // var 't' will be used to chain the db executions together
-        .then(function(t) {
-            console.log("Inside tx #1");
-
-            // transaction #1: Create the basic user details in User table
-            return User.findOrCreate({
-                where: {
-                    email: req.body.user.email
-                },
-                defaults: {
-                    email: req.body.user.email,
-                    password: hashPassword, // store the hashed-up password for security
-                    role: req.body.user.role,
-                    firstname: req.body.user.firstname,
-                    lastname: req.body.user.lastname,
-                    status: req.body.user.status
-                }
-            },
-            // manually pass transaction to the next
-            // by passing '{transaction: t}' as the second argument
-            {transaction: t})
-
-            .then(function(user) {
-                var arrayOfPromises = [];
-
-                console.log("Inside tx #2");
-
-                // Due to the nature of a checkbox element in a HTML form,
-                // when a user selects/unselects a checkbox, value is set to true/false
-                //
-                // req.body.user.qualify captures values from multiple checkboxes and
-                // could contain multiple entries
-                // e.g. qualify: {
-                //          'F001': true,
-                //          'F003': false,
-                //          'F004': true
-                //      }
-                for (var i in req.body.user.qualify) {
-                    // only if value of entry is true, then add a record
-                    // a quirkiness of how checkbox values are stored
-                    console.log("value of qualify: ", i, req.body.user.qualify[i]);
-
-                    if (req.body.user.qualify[i] == true) {
-                        arrayOfPromises.push(
-                            Userqualify.create({
-                                user_id: req.body.user.uid,
-                                qualify_id: i
-                            })
-                        ); 
-                    };
+    // version 2 - using sequelize's feature of findOrCreate
+    Person.findOrCreate({
+        where: {
+            email: req.body.user.email
+        },
+        defaults: {
+            email: req.body.user.email,
+            password: hashPassword, // store the hashed-up password for security
+            firstname: req.body.user.firstname,
+            lastname: req.body.user.lastname,
+            role: req.body.user.role,
+            // qualification_id: req.qualification_id,
+            status: req.body.user.status
+        }})
+            .spread(function(user, created) {
+                // if user is successfully created
+                if(created) {
+                    // good security practise dictates that we reset the password
+                    user.password = "";
+                    res.status(201);                // From RESTful Web APIs: Created
+                    res.type("application/json");
+                    res.end();
+                } else {
+                    // if email already exists and user was not created, return an error
+                    user.password = "";
+                    res.status(409);                // From Restful Web APIs: Conflict
+                    res.type("application/json");
+                    res.json(null);                 // Anything else we can return?
                 };
-                // passing on the array of promises from the for-loop
-                $q.all(arrayOfPromises)
-                    .then(function() {
-                        console.log("Inside tx #2. All tx executed.");
-                        
-                        // good security practise dictates that we reset the password
-                        req.body.user.password = "";
-                        res.status(200);
-                        res.type("application/json");
-                        res.end();
-                        // if successful, commit all additions
-                        return t.commit();
-                    })
-                    .catch(function() {
-                        console.log("Inside tx #2. All tx failed.");
-                        
-                        // if email already exists and user was not created, return an error
-                        req.body.user.password = "";
-                        res.status(409);                // From Restful Web APIs: Conflict
-                        res.type("application/json");
-                        res.json(null);
-
-                        // if failed, rollback db to original state
-                        return t.rollback();
-                    });
-            }).catch(function(err) {
-                console.log("Inside tx #1. Tx failed.");
-                
-                // can we have another catch for the prior promise?
-                // assume a database error occurred as fitnessDb.transaction() failed?
-                res.status(409);                    // From Restful Web APIs: Server error
+            }).error(function(err){
+                // else if a database error occurred instead
+                res.status(500);                    // From Restful Web APIs: Server error
                 res.type("application/json");
                 res.json(err);
             });
 
-
-        }).catch(function(err) {
-            console.log("Outside tx #1. No transaction took place.");
-            
-            // can we have another catch for the prior promise?
-            // assume a database error occurred as fitnessDb.transaction() failed?
-            res.status(500);                    // From Restful Web APIs: Server error
-            res.type("application/json");
-            res.json(err);
-        }); // end of ALL transactions
-
-    // version 2 - using sequelize's feature of findOrCreate
-    // User.findOrCreate({
-    //     where: {
-    //         email: req.body.user.email
-    //     },
-    //     defaults: {
-    //         email: req.body.user.email,
-    //         password: hashPassword, // store the hashed-up password for security
-    //         firstname: req.body.user.firstname,
-    //         lastname: req.body.user.lastname,
-    //         role: req.body.user.role,
-    //         // qualification_id: req.qualification_id,
-    //         status: req.body.user.status
-    //     }})
-    //         .spread(function(user, created) {
-    //             // if user is successfully created
-    //             if(created) {
-    //                 // good security practise dictates that we reset the password
-    //                 user.password = "";
-    //                 res.status(201);                // From RESTful Web APIs: Created
-    //                 res.type("application/json");
-    //                 res.end();
-    //             } else {
-    //                 // if email already exists and user was not created, return an error
-    //                 user.password = "";
-    //                 res.status(409);                // From Restful Web APIs: Conflict
-    //                 res.type("application/json");
-    //                 res.json(null);                 // Anything else we can return?
-    //             };
-    //         }).error(function(err){
-    //             // else if a database error occurred instead
-    //             res.status(500);                    // From Restful Web APIs: Server error
-    //             res.type("application/json");
-    //             res.json(err);
-    //         });
-
     // version 1 - just a simple create
-    // User.create({
+    // Person.create({
     //         email: req.body.email,
     //         password: req.body.password,
     //         role: req.body.role,
@@ -360,8 +238,8 @@ app.get("/api/users", function (req, res) {
     // var sortOrder = req.query.sortOrder || "ASC";
 
     console.log('Getting a list of users...');
-    User.findAll({
-        attributes: ['uid', 'firstname', 'lastname', 'email'],
+    Person.findAll({
+        attributes: ['id', 'firstname', 'lastname', 'email'],
         // where: { firstname: {$like: '%'+keyword+'%'}},
         where: {$or: [
             {firstname: {$like: '%' + keyword + '%'}},
@@ -369,12 +247,7 @@ app.get("/api/users", function (req, res) {
             {email: {$like: '%' + keyword + '%'}}
         ]},
         //order: [[sortBy, sortOrder]],
-        limit: 20,
-        include: [{
-            // Include Qualifications model to get fitness activity type
-            model: Userqualify,
-            include: [Qualification]
-        }]
+        limit: 20
     })
         .then(function(users){
             res.status(200);
@@ -391,8 +264,8 @@ app.get("/api/users", function (req, res) {
 app.get("/api/users/:userId", function (req, res) {
     var userId = parseInt(req.params.userId);
     
-    User.findById(userId, {
-        attributes: ['uid', 'firstname', 'lastname', 'email', 'status']
+    Person.findById(userId, {
+        attributes: ['id', 'firstname', 'lastname', 'email', 'status']
     })
         .then(function(result){
             console.log(result.dataValues);
@@ -412,7 +285,7 @@ app.put("/api/users/:userId", function (req, res) {
     console.log("value of UsedId: ", userId);
     console.log("value of user details", req.body.user);
     
-    User.update(
+    Person.update(
         {
             firstname: req.body.user.firstname,
             lastname: req.body.user.lastname,
@@ -422,7 +295,7 @@ app.put("/api/users/:userId", function (req, res) {
             // lastname: 'Ng',
             // status: 1
         },{
-            where: {uid: userId}
+            where: {id: userId}
         })
             .then(function(result){
                 res.status(200);
@@ -439,9 +312,9 @@ app.put("/api/users/:userId", function (req, res) {
 app.delete("/api/users/:userId", function (req, res) {
     var userId = parseInt(req.params.userId);
 
-    User.destroy({
+    Person.destroy({
         // soft delete; check deleteAt column for timestamp
-        where: {uid: userId}
+        where: {id: userId}
     })
         .then(function(result){
             res.status(200);
