@@ -414,12 +414,28 @@ background-color: #3B3E45;
     margin-right: 0px;
 }
 
+.addnew2 {
+    margin-top: 20px;
+    margin-right: 0px;
+    margin-left: 15px;
+}
+
 /* ---------------------------------------------------
     USER PROFILE
 ----------------------------------------------------- */
 
 .profile.header {
     margin-top: 0;
+}
+
+/* ---------------------------------------------------
+    TRAINER PANEL
+----------------------------------------------------- */
+
+.trainer-panel {
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 12px;
 }
 
 /* ---------------------------------------------------
