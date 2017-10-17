@@ -21,6 +21,58 @@ module.exports = function(database, Sequelize) {
                 charset: 'utf8',
                 collate: 'utf8_unicode_ci'
             },
+            start_time: {
+                type: Sequelize.DATE,
+                allowNull: true
+            },
+            duration: {
+                type: Sequelize.INTEGER(11),
+                allowNull: true
+            },
+            addr_name: {
+                type: Sequelize.STRING(45),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
+            address1: {
+                type: Sequelize.STRING(45),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
+            address2: {
+                type: Sequelize.STRING(45),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
+            postcode: {
+                type: Sequelize.STRING(6),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
+            neighbourhood: {
+                type: Sequelize.STRING(20),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
+            minsize: {
+                type: Sequelize.INTEGER(11),
+                allowNull: true
+            },
+            maxsize: {
+                type: Sequelize.INTEGER(11),
+                allowNull: true
+            },
+            instructions: {
+                type: Sequelize.STRING(255),
+                allowNull: true,
+                charset: 'utf8',
+                collate: 'utf8_unicode_ci'
+            },
             category: {
                 type: Sequelize.STRING(10),
                 allowNull: true,
@@ -31,7 +83,15 @@ module.exports = function(database, Sequelize) {
                 type: Sequelize.INTEGER(11),
                 allowNull: false,
                 references: {
-                    model: 'Trainer',
+                    model: 'Person',
+                    key: 'id'
+                }
+            },
+            backup_id: {
+                type: Sequelize.INTEGER(11),
+                allowNull: true,
+                references: {
+                    model: 'Person',
                     key: 'id'
                 }
             },

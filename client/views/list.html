@@ -13,28 +13,26 @@
 </div>
 
 <div class="container-fluid"></div>
-        <!-- Search Form -->
-        <form role="form" class="usrsrch">
-        
-        <!-- Search Field -->
-            <div class="row">
-                <div class="form-group">
-                    <div class="input-group col-md-12">
-                        <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "listCtrl.keyword" placeholder="Search for a user" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-success usrsrchbtn" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></button>
-                        </span>
-                        </span>
-                    </div>
+    <!-- Search Form -->
+    <form role="form" class="usrsrch" ng-click="listCtrl.getList()">
+    
+    <!-- Search Field -->
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group col-md-12">
+                    <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "listCtrl.keyword" placeholder="Search for a user" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-success usrsrchbtn" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
                 </div>
             </div>
-            
-        </form>
-        <!-- End of Search Form -->
+        </div>
+        
+    </form>
+    <!-- End of Search Form -->
 </div>
-
-
-
 
     <!-- <div class="container-fluid">
         <div class="row">

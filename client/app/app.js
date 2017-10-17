@@ -52,18 +52,20 @@
         // FUNCTION DECLARATION AND DEFINITION ------------------------------------------
         // insertUser uses HTTP POST to send user information to the server's /users route
         // Parameters: user information; Returns: Promise object
-        function insertUser(newUser) {
+        // depend on separate form to set value of 'role'
+        // 0: Admin, 1: Trainer, 2: Client
+        userSvc.insertUser = function(newUser) {
             console.log("User details to insert: ", newUser);
             return $http({
                 method: 'POST',
-                url: 'api/users',
+                url: '/api/register',
                 data: {user: newUser}
             });
         };
         
         // retrieveUserById retrieves specific User information from the server via HTTP GET.
         // Parameters: userId. Returns: Promise object
-        function retrieveUserById(userId) {
+        userSvc.retrieveUserById = function(userId) {
             return $http({
                 method: 'GET',
                 url: 'api/users/' + userId
@@ -72,7 +74,7 @@
 
         // updateUser updates a specific User information from the server via HTTP GET.
         // Parameters: user object. Returns: Promise object
-        function updateUser(userToUpdate) {
+        userSvc.updateUser = function(userToUpdate) {
             console.log("User details to update: ", userToUpdate);
             return $http({
                 method: 'PUT',
@@ -83,7 +85,7 @@
 
         // deleteUser deletes a user by userId
         // Parameters: userId. Returns: Promise object!
-        function deleteUser(userId) {
+        userSvc.deleteUser = function(userId) {
             return $http({
                 method: 'DELETE',
                 url: 'api/users/' + userId
@@ -93,7 +95,8 @@
         // retrieveUsers retrieves user information from the server via HTTP GET
         // Passes information via the query string (params)
         // Parameters: keyword. Returns: Promise object
-        function retrieveUsers(keyword){
+        userSvc.retrieveUsers = function(keyword){
+            console.log("Svc: value of keyword: ", keyword);
             return $http({
                 method: 'GET',
                 url: 'api/users',
@@ -103,11 +106,10 @@
         
         // loginUser authenticates the user against server details
         // Parameters: userProfile (email & password). Returns: Promise object!
-        function loginUser(userProfile) {
-            console.log("login credentials received from controller: ", userProfile);
+        userSvc.loginUser = function(userProfile) {
             return $http({
                 method: 'POST',
-                url: '/api/users/auth',
+                url: '/signin',
                 // passport is expecting 2 values: username (email) and password
                 data: {
                     email: userProfile.email,
@@ -137,21 +139,12 @@
 
         // logoutUser logs out user out of the current session
         // Parameters: none. Returns: Promise object!
-        function logoutUser() {
+        userSvc.logoutUser = function() {
             return $http({
                 method: 'GET',
                 url: '/signout'
             });
         };
-
-        // Functions summary and assignment -------------------------------------------------
-        userSvc.insertUser = insertUser;
-        userSvc.retrieveUserById = retrieveUserById;
-        userSvc.updateUser = updateUser;
-        userSvc.deleteUser = deleteUser;
-        userSvc.retrieveUsers = retrieveUsers;     
-        userSvc.loginUser = loginUser;
-        userSvc.logoutUser = logoutUser;
 
     }; // end of UserSvc
 
@@ -170,7 +163,6 @@
             //      loginCtrl.user.email and loginCtrl.user.password
             UserSvc.loginUser(loginCtrl.user)
                 .then(function(result) {
-                    console.log("Post-login results: ", result);   
                     // check status field is 200 for successful login 
                     if (result.status == 200) {
                         $state.go('list');
@@ -222,10 +214,9 @@
         listCtrl.users = {};
 
         getList = function() {
-            console.log("value of keyword", listCtrl.keyword);
+            console.log("Ctrl: value of keyword", listCtrl.keyword);
             UserSvc.retrieveUsers(listCtrl.keyword)
                 .then(function(users){
-                    console.log("users returned: ", users);
                     listCtrl.users = users.data;
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
@@ -235,7 +226,7 @@
         // display initial list of users by default
         getList();
         // assign same functionality to controller
-        listCtrl.getList = getList();
+        listCtrl.getList = getList;
 
         listCtrl.addUser = function(){
             $state.go("add");

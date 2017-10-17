@@ -9,11 +9,11 @@ module.exports = function(database, Sequelize) {
                 primaryKey: true,
                 autoIncrement: true
             },
-            run_id: {
+            class_id: {
                 type: Sequelize.INTEGER(11),
                 allowNull: false,
                 references: {
-                    model: 'Run',
+                    model: 'Class',
                     key: 'id'
                 }
             },
@@ -21,7 +21,7 @@ module.exports = function(database, Sequelize) {
                 type: Sequelize.INTEGER(11),
                 allowNull: false,
                 references: {
-                    model: 'Client',
+                    model: 'Person',
                     key: 'id'
                 }
             },
@@ -29,7 +29,7 @@ module.exports = function(database, Sequelize) {
                 type: Sequelize.INTEGER(11),
                 allowNull: false,
                 references: {
-                    model: 'Trainer',
+                    model: 'Person',
                     key: 'id'
                 }
             },
