@@ -12,7 +12,7 @@
                 </div>
             </div>
 
-            <div class="form-group ">
+            <div class="form-group">
                 <div class="input-group">
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
@@ -29,6 +29,11 @@
             </div>
         </form>
         <div ng-show="loginCtrl.message">{{ loginCtrl.message }}</div>
+            
+        <div class="register row">
+            <button ui-sref="clientreg" class="btn btn-success sign-in pull-left clientbtn">Sign Up as Client</button>
+            <button ui-sref="trainerreg" class="btn btn-warning sign-in pull-right trainerbtn">Sign Up as Trainer</button>
+        </div>
         <!-- <div class="row">
             <div class="forgot">
                 <p>Forgot Password</p>

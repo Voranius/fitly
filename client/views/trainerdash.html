@@ -1,0 +1,36 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+
+        <div class="navbar-header nav navbar-nav navbar-left">
+                <h3>Welcome, {{user.firstname}}</h3>
+        </div>
+
+    </div>
+</nav>
+
+<div>
+<h4 class="sah4">Trainer Panel</h4>
+</div>
+
+<div class="container-fluid"></div>
+        <!-- Search Form -->
+        <form role="form" class="usrsrch">
+        
+        <!-- Search Field -->
+            <div class="row">
+                <div class="form-group">
+                    <div class="input-group col-md-12">
+                        <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "listCtrl.keyword" placeholder="Search for a user" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-success usrsrchbtn" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></button>
+                        </span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        <!-- End of Search Form -->
+</div>
+
+<button type="button" class="btn btn-primary btn-xs addnew pull-left" ng-click="trainerdashCtrl.addClass()"><span class="glyphicon glyphicon-plus-sign"></span>Add a New Class</button>

@@ -25,10 +25,25 @@
                 templateUrl: 'views/list.html',
                 controller: 'ListCtrl as listCtrl'
             })
+            .state('traindash', {
+                url: '/traindash',
+                templateUrl: 'views/trainerdash.html',
+                controller: 'TrainerDashCtrl as trainerdashCtrl'
+            })
             .state('add', {
                 url:'/add',
                 templateUrl: 'views/add.html',
                 controller: 'AddCtrl as addCtrl'
+            })
+            .state('clientreg', {
+                url:'/clientreg',
+                templateUrl: 'views/clientreg.html',
+                controller: 'ClientRegCtrl as clientregCtrl'
+            })
+            .state('trainerreg', {
+                url:'/trainerreg',
+                templateUrl: 'views/trainerreg.html',
+                controller: 'TrainerRegCtrl as trainerregCtrl'
             })
             .state('view', {
                 url:'/view/:userId',
@@ -189,6 +204,7 @@
                     }
                     $state.go('login');
                 });
+
         };
     };
 
