@@ -2,30 +2,52 @@
 // Server-side code
 // Consists of server-side API calls
 
-// === ALL users ===
-// *1. Sign in a user                POST /signin
-// *2. Sign out a user               GET /signout
-// *3. Register (add) a user         POST /api/register
-// *4. View my profile               GET /api/users/:userId
-// *5. Update my profile             PUT /api/users/:userId
+// =============== SUMMARY OF ENDPOINTS, GROUPED BY USER FUNCTION ===============
+// For ALL users
+// 1. Sign in a user                POST /signin
+// 2. Sign out a user               GET /signout
+// 3. Register (add) a user         POST /api/users
+// 4. View my profile               GET /api/users/:userId
+// 5. Update my profile             PUT /api/users/:userId
 
-// === CLIENT ===
+// For CLIENT
 // 1. Display all classes/search    GET /api/classes
 // 2. View a class                  GET /api/classes/:classId
-// 3. Book a class                  POST /api/booking/:classId
-// 4. View booked classes           GET /api/booking/:userId
-// 5. Cancel a class                DELETE /api/booking/:classId
+// 3. Book a class                  POST /api/bookings
+// 4. View booked classes           GET /api/bookings
+// 5. Cancel a class                DELETE /api/bookings
 
-// === TRAINER ===
-// 1. View upcoming classes         GET /api/booking/:userId
+// For TRAINER
+// 1. View upcoming classes         GET /api/bookings/:trainerId
 // 2. View a class                  GET /api/classes/:classId
 // 3. Add a class                   POST /api/classes
 // 4. Update a class                PUT /api/classes/:classId
 // 5. Delete a class                DELETE /api/classes/:classId
 
-// === ADMIN ===
+// For ADMIN
 // 1. Display all users/search      GET /api/users
 // 2. Delete a user                 DELETE /api/users/:userId
+
+// =============== SUMMARY OF ENDPOINTS, GROUPED BY ENDPOINTS ===============
+// POST 	/signin                     Sign in a user (all users)
+// GET 	    /signout                    Sign out a user (all users)
+
+// GET 	    /api/users                  Display all users/search (Admin)
+// GET 	    /api/users/:userId          View my profile (all users)
+// POST 	/api/users                  Register (add) a user (all users)
+// PUT 	    /api/users/:userId          Update my profile (all users)
+// DELETE 	/api/users/:userId          Delete a user (Admin)
+
+// GET 	    /api/classes                Display all classes/search (client)
+// GET 	    /api/classes/:classId       View a class (all users)
+// POST 	/api/classes                Add a class (trainer)
+// PUT 	    /api/classes/:classId       Update a class (trainer)
+// DELETE 	/api/classes/:classId       Delete a class (trainer)
+
+// GET 	    /api/bookings               View booked classes (client)
+// GET 	    /api/bookings/:trainerId    View upcoming classes (trainer)
+// POST 	/api/bookings               Book a class (client)
+// DELETE 	/api/bookings               Cancel a class (client)
 
 'use strict';
 
@@ -72,14 +94,14 @@ var Person = require('./models/person')(fitnessDb, sequelize);
 var Class = require('./models/class')(fitnessDb, sequelize);
 var Transaction = require('./models/transaction')(fitnessDb, sequelize);
 
-// A User has a few qualifications, tracked in Userqualify under 'user_id'
-// This is linked via 'id' in User
-Person.hasMany(Transaction);
-Person.hasMany(Class);
-Class.hasMany(Transaction);
-// Userqualify exists solely to match to Qualifications
-// It uses 'qualify_id' to point to correspoding 'qid' in Qualification
-// Userqualify.belongsTo(Qualification, {foreignKey: 'qualify_id'});
+// Person.hasMany(Transaction);
+Transaction.belongsTo(Person, {foreignKey: 'client_id'});
+
+//Person.hasMany(Class);
+Class.belongsTo(Person, {foreignKey: 'creator_id'});
+
+Class.hasMany(Transaction, { foreignKey: 'class_id' });
+Transaction.belongsTo(Class, {foreignKey: 'class_id'});
 
 // =============== AUTHENTICATION-RELATED SETUP & FUNCTION CALLS ===============
 
@@ -215,13 +237,13 @@ app.post("/signin",
 });
 
 // Set up endpoint to check authenticated status of user
-app.get('/api/users/status', function(req, res, next) {
-    if (req.user) {
-        next();
-    } else {
-        return res.status(500).json({err: 'User not logged in.'});  
-    }
-});
+// app.get('/userstatus', function(req, res, next) {
+//     if (req.user) {
+//         next();
+//     } else {
+//         return res.status(500).json({err: 'User not logged in.'});  
+//     }
+// });
 
 // SIGN-OUT one user
 app.get("/signout", function (req, res) {
@@ -235,7 +257,10 @@ app.get("/signout", function (req, res) {
 
 // =============== USER-RELATED API CALLS ===============
 // REGISTER a user
-app.post("/api/register", function (req, res) {
+// Depends on client-end form to set role of trainer, client or Admin
+// Used for basic/initial registration
+// User completes full profile when performing an update
+app.post("/api/users", function (req, res) {
     // verify that confirmation password matches original password keyed in
     // otherwise return an error
     if(!(req.body.user.password === req.body.user.confirmpassword)) {
@@ -299,6 +324,8 @@ app.post("/api/register", function (req, res) {
 });
 
 // RETRIEVE a list of users
+// For Admin
+// User data: id, firstname, lastname, email, role, status
 app.get("/api/users", function (req, res) {
     // manipulate variables by setting defaults as well
     // var keyword = ""; // use "he" as dummy data to test
@@ -309,7 +336,7 @@ app.get("/api/users", function (req, res) {
 
     console.log('Server: Value of keyword: ', keyword);
     Person.findAll({
-        attributes: ['id', 'firstname', 'lastname', 'email'],
+        attributes: ['id', 'firstname', 'lastname', 'email', 'role', 'status'],
         // where: { firstname: {$like: '%'+keyword+'%'}},
         where: {$or: [
             {firstname: {$like: '%' + keyword + '%'}},
@@ -331,6 +358,8 @@ app.get("/api/users", function (req, res) {
 });
 
 // RETRIEVE one user
+// Returns full profile of user
+// User data: id, email, firstname, lastname, gender, age, id_num, id_type, role, status
 app.get("/api/users/:userId", function (req, res) {
     var userId = parseInt(req.params.userId);
     
@@ -350,6 +379,8 @@ app.get("/api/users/:userId", function (req, res) {
 });
 
 // UPDATE one user
+// Cannot change email & role
+// User data: firstname, lastname, gender, age, id_num, id_type, status
 app.put("/api/users/:userId", function (req, res) {
     var userId = parseInt(req.params.userId);
     console.log("value of UsedId: ", userId);
@@ -401,6 +432,8 @@ app.delete("/api/users/:userId", function (req, res) {
 
 // =============== CLASS-RELATED API CALLS ===============
 // RETRIEVE a list of classes
+// Returns preliminary/basic class details
+// Class data: id, name, details, start_time, duration, neighbourhood, category
 app.get("/api/classes", function (req, res) {
     // manipulate variables by setting defaults as well
     var keyword = req.query.keyword || "";
@@ -432,11 +465,13 @@ app.get("/api/classes", function (req, res) {
 });
 
 // RETRIEVE one class
+// Returns full class details
+// Class data: id, name, details, start_time, duration, addr_name, address1, address2, postcode, neighbourhood, minsize, maxsize, instructions, category, creator_id, status
 app.get("/api/classes/:classId", function (req, res) {
     var classId = parseInt(req.params.classId);
     
     Class.findById(classId, {
-        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'addr_name', 'address1', 'address2', 'postcode', 'neighbourhood', 'minsize', 'maxsize', 'instructions', 'category', 'creator_id', 'backup_id', 'status'],
+        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'addr_name', 'address1', 'address2', 'postcode', 'neighbourhood', 'minsize', 'maxsize', 'instructions', 'category', 'creator_id', 'status'],
     })
         .then(function(result){
             console.log(result.dataValues);
@@ -452,7 +487,51 @@ app.get("/api/classes/:classId", function (req, res) {
         });
 });
 
+// RETRIEVE a trainer's list of classes
+// Class data: id, name, details, start_time, duration, neighbourhood, category
+// And booking data: id, client_id
+app.get("/api/bookings/:trainerId", function (req, res) {
+    // manipulate variables by setting defaults as well
+    var trainerId = parseInt(req.params.trainerId);
+    var keyword = req.query.keyword || "";
+    var sortBy = req.query.sortBy || "start_time";
+    var sortOrder = req.query.sortOrder || "ASC";
+
+    console.log('Server: Value of keyword: ', keyword);
+    Class.findAll({
+        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category'],
+        where: {$and: [
+                    { creator_id: trainerId},
+                    {$or: [
+                        {name: {$like: '%' + keyword + '%'}},
+                        {details: {$like: '%' + keyword + '%'}},
+                        {neighbourhood: {$like: '%' + keyword + '%'}},
+                        {category: {$like: '%' + keyword + '%'}}
+                    ]}
+                ]},
+        order: [[sortBy, sortOrder]],
+        // Include Transaction details - bookings for class
+        include: [{
+            model: Transaction,
+            attributes: ['id', 'client_id']
+        }],
+        limit: 20
+    })
+        .then(function(classes){
+            res.status(200);
+            res.type("application/json");
+            // start_time in MySQL DATETIME format 2017-11-19T10:00:00.000Z. Convert to Unix time at client
+            res.json(classes);
+        }).catch(function(err){
+            res.status(404);
+            res.type("application/json");
+            res.json(err);
+        });
+});
+
 // UPDATE one class
+// Cannot be updated: creator_id
+// Class data: name, details, start_time, duration, addr_name, address1, address2, postcode, neighbourhood, minsize, maxsize, instructions, category, status
 app.put("/api/classes/:classId", function (req, res) {
     var classId = parseInt(req.params.classId);
     console.log("value of classId: ", classId);
@@ -510,6 +589,7 @@ app.delete("/api/classes/:classId", function (req, res) {
 });
 
 // ADD a class
+// Create the full class data
 app.post("/api/classes", function (req, res) {
     console.log("New class details: ", req.body);
     
@@ -535,6 +615,115 @@ app.post("/api/classes", function (req, res) {
         res.type("application/json");
         res.end();
     });
+});
+
+// RETRIEVE a list of classes booked by a clientId
+// Returns preliminary basic class details
+// Booking data: id, class_id
+// Class data: id, name, start_time, category, creator_id
+// Trainer person data: firstname, lastname
+app.get("/api/bookings", function (req, res) {
+    // manipulate variables by setting defaults as well
+    var clientId = req.query.clientId || "";
+    var sortBy = req.query.sortBy || "start_time";
+    var sortOrder = req.query.sortOrder || "ASC";
+
+    console.log('Server: Value of clientId: ', clientId);
+    Transaction.findAll({
+        attributes: ['id', 'class_id'],
+        where: {client_id: clientId},
+        // Include Class details
+        include: [{
+            model: Class,
+            attributes: ['id', 'name', 'start_time', 'category', 'creator_id'],
+            // where: { id: class_id },
+            order: [[sortBy, sortOrder]],
+            include: [{
+                model: Person,
+                attributes: ['firstname', 'lastname']                
+            }],
+        }],
+        limit: 20
+    })
+        .then(function(bookings){
+            res.status(200);
+            res.type("application/json");
+            res.json(bookings);
+        }).catch(function(err){
+            res.status(404);
+            res.type("application/json");
+            res.json(err);
+        });
+});
+
+// BOOK a class
+// Accepts class_id & client_id to perform booking
+app.post("/api/bookings", function (req, res) {
+    console.log("New booking details: ", req.body);
+
+    // version 2 - check for duplicate booking before inserting, prevent double-booking
+    Transaction.findOrCreate({
+        where: {$and: [
+            {class_id: req.body.class_id},
+            {client_id: req.body.client_id}
+        ]},
+        defaults: {
+            class_id: req.body.class_id,
+            client_id: req.body.client_id
+        }
+    })
+        .spread(function(tx, created) {
+            // console.log("Value of transaction added: ", tx);
+            // if transaction is successfully inserted
+            if(created) {
+                res.status(201);                // From RESTful Web APIs: Created
+                res.type("application/json");
+                res.end();
+            } else {
+                res.status(409);                // From Restful Web APIs: Conflict
+                res.type("application/json");
+                res.json(null);                 // Anything else we can return?
+            };
+        }).error(function(err){
+            // else if a database error occurred instead
+            res.status(500);                    // From Restful Web APIs: Server error
+            res.type("application/json");
+            res.json(err);
+        });
+
+    // version 1
+    // Transaction.create({
+    //     class_id: req.body.class_id,
+    //     client_id: req.body.client_id
+    // }).then(function(result) {
+    //     res.status(200);
+    //     res.type("application/json");
+    //     res.end();
+    // });
+});
+
+// CANCEL one booking
+// Accepts class_id & client_id to cancel booking
+app.delete("/api/bookings", function (req, res) {
+    // var classId = parseInt(req.params.classId);
+    console.log("Booking to delete: ", req.body);
+
+    Transaction.destroy({
+        // soft delete; check deleteAt column for timestamp
+        where: {$and: [
+            {class_id: req.body.class_id},
+            {client_id: req.body.client_id}
+        ]}
+    })
+        .then(function(result){
+            res.status(200);
+            res.type("application/json");
+            res.end();
+        }).catch(function(err){
+            res.status(404);
+            res.type("application/json");
+            res.json(err);
+        });
 });
 
 // =============== OTHER SERVER SETUP CALLS ===============
