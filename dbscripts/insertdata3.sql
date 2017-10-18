@@ -34,3 +34,4 @@ INSERT INTO `fitlydb`.`transaction` (`class_id`, `client_id`, `trainer_id`) VALU
 INSERT INTO `fitlydb`.`transaction` (`class_id`, `client_id`, `trainer_id`) VALUES (2, 14, 2);
 INSERT INTO `fitlydb`.`transaction` (`class_id`, `client_id`, `trainer_id`) VALUES (3, 15, 3);
 INSERT INTO `fitlydb`.`transaction` (`class_id`, `client_id`, `trainer_id`) VALUES (3, 5, 3);
+INSERT INTO `fitlydb`.`transaction` (`class_id`, `client_id`, `trainer_id`) VALUES (3, 5, 3);

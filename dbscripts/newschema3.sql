@@ -57,12 +57,12 @@ CREATE TABLE if not exists `transaction`
   `id` INT(11) AUTO_INCREMENT,
   `class_id` INT(11) NOT NULL,
   `client_id` INT(11) NOT NULL,
-  `trainer_id` INT(11) NOT NULL,
+  -- `trainer_id` INT(11) NOT NULL,
   `createdAt` DATETIME,
   `updatedAt` DATETIME,
   `deletedAt` DATETIME,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`class_id`) REFERENCES `fitlydb`.`class`(`id`),
-  FOREIGN KEY (`client_id`) REFERENCES `fitlydb`.`person`(`id`),
-  FOREIGN KEY (`trainer_id`) REFERENCES `fitlydb`.`person`(`id`)
+  FOREIGN KEY (`client_id`) REFERENCES `fitlydb`.`person`(`id`)
+  -- FOREIGN KEY (`trainer_id`) REFERENCES `fitlydb`.`person`(`id`)
 );

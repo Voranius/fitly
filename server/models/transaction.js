@@ -25,14 +25,14 @@ module.exports = function(database, Sequelize) {
                     key: 'id'
                 }
             },
-            trainer_id: {
-                type: Sequelize.INTEGER(11),
-                allowNull: false,
-                references: {
-                    model: 'Person',
-                    key: 'id'
-                }
-            },
+            // trainer_id: {
+            //     type: Sequelize.INTEGER(11),
+            //     allowNull: false,
+            //     references: {
+            //         model: 'Person',
+            //         key: 'id'
+            //     }
+            // },
             createdAt: {
                 type: Sequelize.DATE,
                 allowNull: true
@@ -51,7 +51,8 @@ module.exports = function(database, Sequelize) {
             tableName: 'transaction',
             // Allow timestamp attributes (updatedAt, createdAt)
             // By default, added to know when db entry added & last updated
-            timestamps: true
+            timestamps: true,
+            paranoid: true
         }
     );
     return Transaction;
