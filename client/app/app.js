@@ -60,6 +60,11 @@
                 templateUrl: 'views/trainerreg.html',
                 controller: 'TrainerRegCtrl as trainerregCtrl'
             })
+            .state('profile', {
+                url:'/profile/:userId',
+                templateUrl: 'views/profile.html',
+                controller: 'ViewCtrl as viewCtrl'
+            })
             .state('view', {
                 url:'/view/:userId',
                 templateUrl: 'views/view.html',
