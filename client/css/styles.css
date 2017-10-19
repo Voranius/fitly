@@ -265,77 +265,6 @@ a.article, a.article:hover {
     transition: all 5s ease-in;
     }
 
-.flmenu {
-width: 160px!important;
-height: 100px!important;
-margin:5px;
-display:block !important;
-padding-top:23px;
-color:#f5f5f5;
-}
-
-.span-icon{ font-size:30px;}
-
-.flmenu:hover{ background-color:#f5f5f5 !important; cursor:pointer; color:#CCCCCC;}
-
-.flmenu1{
-background-color: #000000;
-}
-.flmenu2{
-background-color: #00B159;
-}
-.flmenu3{
-background-color: #00AEDB;
-}
-.flmenu4{
-background-color: #F37735;
-}
-.flmenu5{
-background-color: #EC098C;
-}
-.flmenu6{
-background-color: #314E6C;
-}
-.flmenu7{
-background-color: #44A5AC;
-}
-.flmenu8{
-background-color: #297E83;
-}
-.flmenu9{
-background-color:#CC3366;
-}
-.flmenu10{
-background-color: #C9312C;
-}
-.flmenu11{
-background-color:#6699CC;
-}
-.flmenu12{
-background-color: #7C4199;
-}
-.flmenu13{
-background-color: #FFC425;
-}
-.flmenu14{
-background-color: #034A8C;
-}
-.flmenu15{
-background-color: #E59B18;
-}
-.flmenu16{
-background-color: #006054;
-}
-.flmenu17{
-background-color: #44A5AC;
-}
-.flmenu18{
-background-color: #336797;
-}
-.flmenu19{
-background-color: #3B3E45;
-}
-
 /* ---------------------------------------------------
     SEARCH INPUT BOX
 ----------------------------------------------------- */
@@ -437,6 +366,19 @@ background-color: #3B3E45;
     margin-left: 15px;
     margin-right: 12px;
 }
+
+/* ---------------------------------------------------
+    ADD CLASS - REMOVE POSTAL CODE SPINNER
+----------------------------------------------------- */
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
 
 /* ---------------------------------------------------
     MEDIA QUERIES
