@@ -98,7 +98,7 @@
             console.log("User details to insert: ", newUser);
             return $http({
                 method: 'POST',
-                url: '/api/register',
+                url: '/api/users',
                 data: {user: newUser}
             });
         };
@@ -108,7 +108,7 @@
         userSvc.retrieveUserById = function(userId) {
             return $http({
                 method: 'GET',
-                url: 'api/users/' + userId
+                url: '/api/users/' + userId
             });
         };
 
@@ -118,7 +118,7 @@
             console.log("User details to update: ", userToUpdate);
             return $http({
                 method: 'PUT',
-                url: 'api/users/' + userToUpdate.id,
+                url: '/api/users/' + userToUpdate.id,
                 data: {user: userToUpdate}
             });
         };
@@ -128,7 +128,7 @@
         userSvc.deleteUser = function(userId) {
             return $http({
                 method: 'DELETE',
-                url: 'api/users/' + userId
+                url: '/api/users/' + userId
             });
         };
 
@@ -139,7 +139,7 @@
             console.log("Svc: value of keyword: ", keyword);
             return $http({
                 method: 'GET',
-                url: 'api/users',
+                url: '/api/users',
                 params: {'keyword': keyword}
             });
         };
@@ -158,24 +158,24 @@
             });
         };
 
-        userSvc.isUserLoggedIn = function() {
-            return $http({
-                method: 'GET',
-                url: 'api/users/status'
-            });
-        };
+        // userSvc.isUserLoggedIn = function() {
+        //     return $http({
+        //         method: 'GET',
+        //         url: 'api/users/status'
+        //     });
+        // };
 
-        userSvc.isUserLoggedIn = function(cb) {
-            $http.get('/status/user')
-                .then(function(data) {
-                    user = true;
-                    cb(user);
-                }).catch(function(err) {
-                    console.log("Error: ", err);     
-                    user = false;
-                    cb(user);                    
-                });
-        };
+        // userSvc.isUserLoggedIn = function(cb) {
+        //     $http.get('/status/user')
+        //         .then(function(data) {
+        //             user = true;
+        //             cb(user);
+        //         }).catch(function(err) {
+        //             console.log("Error: ", err);     
+        //             user = false;
+        //             cb(user);                    
+        //         });
+        // };
 
         // logoutUser logs out user out of the current session
         // Parameters: none. Returns: Promise object!
@@ -298,9 +298,6 @@
         addCtrl.message = "";
 
         addCtrl.addUser = function() {
-            // addCtrl.user.qualify contains multiple entries
-            // When a user selects an entry, value is True, when unselected, value is False
-            // e.g. F001: true, F003: false, F004: true, F007: false
             UserSvc.insertUser(addCtrl.user)
                 .then(function(users){
                     addCtrl.message = "User added.";
@@ -309,8 +306,6 @@
                     console.error("Error encountered: ", err);
                 });
         };
-        // unable to implement adding multiple qualifications
-        // checkboxes of: Crossfit, MMA, Core, Weights, Spinning, Aerobics, Boxing, Barre
 
         addCtrl.addAnother = function() {
             // simply just reset form values
@@ -340,7 +335,7 @@
         viewCtrl.saveUser = function() {
             UserSvc.updateUser(viewCtrl.user)
                 .then(function(items){
-                    viewCtrl.message ="Item successfully updated in database.";
+                    viewCtrl.message ="User profile successfully updated in database.";
                 }).catch(function(err){
                     viewCtrl.message ="Error updating to database. Changes not saved.";                    
                     console.error("Error encountered: ", err);
@@ -351,7 +346,7 @@
             UserSvc.deleteUser(viewCtrl.user.id)
                 .then(function (result) {
                     // a browser box to inform the user, before switching states
-                    alert("User successfully removed");
+                    alert("User profile successfully removed");
                     $state.go("list");
                 }).catch(function (err) {
                     console.error("Error: ", err);
