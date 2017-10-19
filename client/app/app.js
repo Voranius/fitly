@@ -14,7 +14,7 @@
     app.controller("ClientRegCtrl", ClientRegCtrl);
     app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
-    app.controller("ViewCtrl", ViewCtrl);
+    app.controller("ProfileCtrl", ProfileCtrl);
     app.controller("LogoutCtrl", LogoutCtrl);
     
     // ===================================================================================
@@ -76,13 +76,9 @@
             .state('profile', {
                 url:'/profile/:userId',
                 templateUrl: 'views/profile.html',
-                controller: 'ViewCtrl as viewCtrl'
-            })
-            .state('view', {
-                url:'/view/:userId',
-                templateUrl: 'views/view.html',
-                controller: 'ViewCtrl as viewCtrl'
-            })
+                controller: 'ProfileCtrl as profileCtrl'
+            });
+
             $urlRouterProvider.otherwise('/login');
     };
 
@@ -198,13 +194,20 @@
     // ===================================================================================
     // ClassSvc to provide central class-database-related services
     // ===================================================================================
+    ClassSvc.$inject = ['$http'];    // Inject $http to use built-in service to communicate with server
+    function ClassSvc($http) {       // ClassService function declaration
+        var classSvc = this;
 
-
+    };
 
     // ===================================================================================
     // BookingSvc to provide central booking-database-related services
     // ===================================================================================
+    BookingSvc.$inject = ['$http'];    // Inject $http to use built-in service to communicate with server
+    function BookingSvc($http) {       // BookingService function declaration
+        var bookingSvc = this;
 
+    };
 
 
     // ===================================================================================
@@ -212,7 +215,7 @@
     // ===================================================================================
     LoginCtrl.$inject = ['$state', 'UserSvc'];
     function LoginCtrl($state, UserSvc) {
-        loginCtrl = this;
+        var loginCtrl = this;
 
         loginCtrl.message = "";
 
@@ -254,7 +257,7 @@
     // ===================================================================================
     LogoutCtrl.$inject = ['$state','UserSvc'];
     function LogoutCtrl($state, UserSvc) {
-        logoutCtrl = this;
+        var logoutCtrl = this;
 
         logoutCtrl.logout = function() {
             UserSvc.logoutUser()
@@ -273,7 +276,7 @@
     // ===================================================================================
     ListCtrl.$inject = ['$state', 'UserSvc'];
     function ListCtrl($state, UserSvc) {
-        listCtrl = this;
+        var listCtrl = this;
 
         listCtrl.keyword = "";
         listCtrl.users = {};
@@ -315,7 +318,7 @@
     // ===================================================================================
     AddUserCtrl.$inject = ['$state', 'UserSvc'];
     function AddUserCtrl($state, UserSvc) {
-        addUserCtrl = this;
+        var addUserCtrl = this;
 
         addUserCtrl.user = {};
         addUserCtrl.message = "";
@@ -342,7 +345,7 @@
     // ===================================================================================
     ViewCtrl.$inject = ['$state', '$stateParams', 'UserSvc'];
     function ViewCtrl($state, $stateParams, UserSvc) {
-        viewCtrl = this;
+        var viewCtrl = this;
 
         viewCtrl.user = {};
         viewCtrl.message = "";
@@ -383,7 +386,7 @@
     // ===================================================================================
     EditCtrl.$inject = ['$state', '$stateParams', 'UserSvc'];
     function EditCtrl($state, $stateParams, UserSvc) {
-        editCtrl = this;
+        var editCtrl = this;
         
         idOfUserToEdit = $stateParams.userId;
         editCtrl.user = {};
@@ -396,36 +399,42 @@
 
     TrainerDashCtrl.$inject = [];
     function TrainerDashCtrl() {
+        var trainerDashCtrl = this;
 
     };
 
     ClientDashCtrl.$inject = [];
     function ClientDashCtrl() {
+        var clientDashCtrl = this;
 
     };
 
     AddClassCtrl.$inject = [];
     function AddClassCtrl() {
+        var addClassCtrl = this;
 
     };
 
     ViewClassCtrl.$inject = [];
     function ViewClassCtrl() {
+        var viewClassCtrl = this;
 
     };
 
     EditClassCtrl.$inject = [];
     function EditClassCtrl() {
-
+        var editClassCtrl = this;
     };
 
     ClientRegCtrl.$inject = [];
     function ClientRegCtrl() {
+        var clientRegCtrl = this;
 
     };
 
     TrainerRegCtrl.$inject = [];
     function TrainerRegCtrl() {
+        var trainerRegCtrl = this;
 
     };
 
