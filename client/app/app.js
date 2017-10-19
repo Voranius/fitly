@@ -3,12 +3,20 @@
 
     app.config(FitlyConfig);
     app.service("UserSvc", UserSvc);
-    app.controller("LogoutCtrl", LogoutCtrl);
     app.controller("LoginCtrl", LoginCtrl);
     app.controller("ListCtrl", ListCtrl);
-    app.controller("AddCtrl", AddCtrl);
-    app.controller("ViewCtrl", ViewCtrl);
+    app.controller("TrainerDashCtrl", TrainerDashCtrl);
+    app.controller("ClientDashCtrl", ClientDashCtrl);
+    app.controller("AddUserCtrl", AddUserCtrl);
+    app.controller("AddClassCtrl", AddClassCtrl);
+    app.controller("ViewClassCtrl", ViewClassCtrl);
+    app.controller("EditClassCtrl", EditClassCtrl);
+    app.controller("ClientRegCtrl", ClientRegCtrl);
+    app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
+    app.controller("ViewCtrl", ViewCtrl);
+    app.controller("LogoutCtrl", LogoutCtrl);
+    
     // ===================================================================================
     // FitlyConfig to set up various states of the system
     // ===================================================================================
@@ -28,42 +36,42 @@
             .state('traindash', {
                 url: '/traindash',
                 templateUrl: 'views/trainerdash.html',
-                controller: 'TrainerDashCtrl as trainerdashCtrl'
+                controller: 'TrainerDashCtrl as trainerDashCtrl'
             })
             .state('clientdash', {
                 url: '/clientdash',
                 templateUrl: 'views/clientdash.html',
-                controller: 'ClientDashCtrl as clientdashCtrl'
+                controller: 'ClientDashCtrl as clientDashCtrl'
             })
-            .state('add', {
-                url:'/add',
-                templateUrl: 'views/add.html',
-                controller: 'AddCtrl as addCtrl'
+            .state('adduser', {
+                url:'/adduser',
+                templateUrl: 'views/adduser.html',
+                controller: 'AddUserCtrl as addUserCtrl'
             })
             .state('addclass', {
                 url:'/addclass',
                 templateUrl: 'views/addclass.html',
-                controller: 'AddClassCtrl as addclassCtrl'
+                controller: 'AddClassCtrl as addClassCtrl'
             })
             .state('viewclass', {
                 url:'/viewclass/:classId',
                 templateUrl: 'views/viewclass.html',
-                controller: 'ViewClassCtrl as viewclassCtrl'
+                controller: 'ViewClassCtrl as viewClassCtrl'
             })
             .state('editclass', {
                 url:'/editclass/:classId',
                 templateUrl: 'views/editclass.html',
-                controller: 'EditClassCtrl as editclassCtrl'
+                controller: 'EditClassCtrl as editClassCtrl'
             })
             .state('clientreg', {
                 url:'/clientreg',
                 templateUrl: 'views/clientreg.html',
-                controller: 'ClientRegCtrl as clientregCtrl'
+                controller: 'ClientRegCtrl as clientRegCtrl'
             })
             .state('trainerreg', {
                 url:'/trainerreg',
                 templateUrl: 'views/trainerreg.html',
-                controller: 'TrainerRegCtrl as trainerregCtrl'
+                controller: 'TrainerRegCtrl as trainerRegCtrl'
             })
             .state('profile', {
                 url:'/profile/:userId',
@@ -136,7 +144,6 @@
         // Passes information via the query string (params)
         // Parameters: keyword. Returns: Promise object
         userSvc.retrieveUsers = function(keyword){
-            console.log("Svc: value of keyword: ", keyword);
             return $http({
                 method: 'GET',
                 url: '/api/users',
@@ -189,6 +196,18 @@
     }; // end of UserSvc
 
     // ===================================================================================
+    // ClassSvc to provide central class-database-related services
+    // ===================================================================================
+
+
+
+    // ===================================================================================
+    // BookingSvc to provide central booking-database-related services
+    // ===================================================================================
+
+
+
+    // ===================================================================================
     // LoginCtrl to handle the initial user login
     // ===================================================================================
     LoginCtrl.$inject = ['$state', 'UserSvc'];
@@ -205,7 +224,12 @@
                 .then(function(result) {
                     // check status field is 200 for successful login 
                     if (result.status == 200) {
-                        $state.go('list');
+                        if (result.data.user.role == '2')
+                            $state.go('clientdash');
+                        else if (result.data.user.role == '1')
+                            $state.go('traindash');
+                        else if (result.data.user.role == '0')
+                            $state.go('list');
                     };
                 }).catch(function(err) {
                     console.log("Values in err: ", err);
@@ -255,7 +279,6 @@
         listCtrl.users = {};
 
         getList = function() {
-            console.log("Ctrl: value of keyword", listCtrl.keyword);
             UserSvc.retrieveUsers(listCtrl.keyword)
                 .then(function(users){
                     listCtrl.users = users.data;
@@ -270,7 +293,7 @@
         listCtrl.getList = getList;
 
         listCtrl.addUser = function(){
-            $state.go("add");
+            $state.go("adduser");
         };
 
         listCtrl.viewUser = function(userIdToView){
@@ -288,29 +311,29 @@
     };
 
     // ===================================================================================
-    // AddCtrl to handle addition of a new user
+    // AddUserCtrl to handle addition of a new user
     // ===================================================================================
-    AddCtrl.$inject = ['$state', 'UserSvc'];
-    function AddCtrl($state, UserSvc) {
-        addCtrl = this;
+    AddUserCtrl.$inject = ['$state', 'UserSvc'];
+    function AddUserCtrl($state, UserSvc) {
+        addUserCtrl = this;
 
-        addCtrl.user = {};
-        addCtrl.message = "";
+        addUserCtrl.user = {};
+        addUserCtrl.message = "";
 
-        addCtrl.addUser = function() {
-            UserSvc.insertUser(addCtrl.user)
-                .then(function(users){
-                    addCtrl.message = "User added.";
+        addUserCtrl.addUser = function() {
+            UserSvc.insertUser(addUserCtrl.user)
+                .then(function(user){
+                    addUserCtrl.message = "User added.";
                 }).catch(function(err){
-                    addCtrl.message = "User not added. Possibly duplicate."
+                    addUserCtrl.message = "User not added. Possibly duplicate."
                     console.error("Error encountered: ", err);
                 });
         };
 
-        addCtrl.addAnother = function() {
+        addUserCtrl.addAnother = function() {
             // simply just reset form values
-            addCtrl.user = {};
-            addCtrl.message = "";
+            addUserCtrl.user = {};
+            addUserCtrl.message = "";
         };
     };
 
@@ -350,9 +373,8 @@
                     $state.go("list");
                 }).catch(function (err) {
                     console.error("Error: ", err);
-                });
-                
-    };
+                });        
+        };
 
     };
 
@@ -370,6 +392,41 @@
         // pass returned record to editCtrl.user to automatically populate fields
 
         // then call UserSvc.updateUser to save changes back to server
+    };
+
+    TrainerDashCtrl.$inject = [];
+    function TrainerDashCtrl() {
+
+    };
+
+    ClientDashCtrl.$inject = [];
+    function ClientDashCtrl() {
+
+    };
+
+    AddClassCtrl.$inject = [];
+    function AddClassCtrl() {
+
+    };
+
+    ViewClassCtrl.$inject = [];
+    function ViewClassCtrl() {
+
+    };
+
+    EditClassCtrl.$inject = [];
+    function EditClassCtrl() {
+
+    };
+
+    ClientRegCtrl.$inject = [];
+    function ClientRegCtrl() {
+
+    };
+
+    TrainerRegCtrl.$inject = [];
+    function TrainerRegCtrl() {
+
     };
 
 })();

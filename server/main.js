@@ -226,11 +226,12 @@ app.post("/signin",
                 // Primarily used when users sign up, during which req.login() can be invoked
                 // to automatically log in newly registered user.
                 req.login(user, function(err) {
+                    console.log("Server: Value of user: ", user);
                     if (err) {
                         return res.status(500).json({err: 'Could not log in user'});
                     } else {
                         // values of 'user' will be assigned to req.user
-                        res.status(200).json({status: 'Login successful!'});
+                        return res.status(200).json({user: req.user, status: 'Login successful!'});
                     };
                 });
             })(req, res, next);
