@@ -45,6 +45,11 @@
                 templateUrl: 'views/addclass.html',
                 controller: 'AddClassCtrl as addclassCtrl'
             })
+            .state('editclass', {
+                url:'/editclass/:classId',
+                templateUrl: 'views/editclass.html',
+                controller: 'EditClassCtrl as editclassCtrl'
+            })
             .state('clientreg', {
                 url:'/clientreg',
                 templateUrl: 'views/clientreg.html',
