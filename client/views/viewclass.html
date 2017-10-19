@@ -1,0 +1,85 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+    
+        <div class="navbar-header nav navbar-nav navbar-left">
+            <h3>Welcome, {{user.firstname}}</h3>
+        </div>
+    
+    </div>
+</nav>
+    
+<div>
+    <h4 class="sah4">View Class</h4>
+</div>
+      
+      
+<div class="container">
+    <div class="row">
+        <form name="viewClassForm" ng-submit="viewclassCtrl.viewClass()">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="classname">Class Name</label>
+                <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" readonly ng-model="viewclassCtrl.class.name"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="details">Class Details</label>
+                <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" readonly ng-model="viewclassCtrl.class.details"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="category">Category</label>
+                <input class="form-control" id="category" name="category" type="text" placeholder="Category" readonly ng-model="viewclassCtrl.class.details"/>                
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="district">District</label>
+                <input class="form-control" id="neighbourhood" name="neighbourhood" type="text" placeholder="District or neighbourhood (i.e, Bedok, Tampines)" readonly ng-model="viewclassCtrl.class.neighbourhood"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="address">Address</label>
+                <input class="form-control" id="address" name="address" type="text" placeholder="Address of Class" readonly ng-model="viewclassCtrl.class.address"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="postcode">Postal Code</label>
+                <input class="form-control" id="postcode" name="postcode" type="number" placeholder="Postal Code" min="6" max="6" readonly ng-model="viewclassCtrl.class.postcode"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="datetime">Date and Time of Class</label>
+                <div>
+                <input class="form-control" id='start_time' name="start_time" type="text" placeholder="Date and Time of Class" readonly ng-model="viewclassCtrl.class.start_time"/>
+                </div>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="duration">Duration of Class</label>
+                <input class="form-control" id="duration" name="duration" type="number" placeholder="Duration of Class" min="1" max="11" readonly ng-model="viewclassCtrl.class.duration"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="minsize">Minimum Class Size</label>
+                <input class="form-control" id="minsize" name="minsize" type="number" placeholder="Minimum Class Size" min="1" max="100" readonly ng-model="viewclassCtrl.class.minsize"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="maxsize">Maximum Class Size</label>
+                <input class="form-control" id="maxsize" name="maxsize" type="number" placeholder="Maximum Class Size" min="1" max="100" readonly ng-model="viewclassCtrl.class.maxsize"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="remarks">Remarks</label>
+                <textarea class="form-control" rows="5" id="instructions" name="instructions" type="text" placeholder="Remarks (i.e, bring your own towel)"  readonly ng-model="viewclassCtrl.class.instructions"></textarea>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <button type="button" class="btn btn-block btn-info" ui-sref="clientdash">Back to Dashboard</button>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <button type="button" class="btn btn-block btn-danger" ng-click="viewclassCtrl.cancelClass()">Cancel Booking</button>
+            </div>
+        </form>
+        <div class="clearfix"></div>
+
+        <br /><br />
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div ng-show="viewclassCtrl.message">{{ viewclassCtrl.message }}</div>
+            </div>
+    </div>
+</div>
