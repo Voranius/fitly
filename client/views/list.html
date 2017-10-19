@@ -14,13 +14,13 @@
 
 <div class="container-fluid"></div>
     <!-- Search Form -->
-    <form role="form" class="usrsrch" ng-click="listCtrl.getList()">
+    <form role="form" class="usrsrch" ng-click="listUsersCtrl.getList()">
     
     <!-- Search Field -->
         <div class="row">
             <div class="form-group">
                 <div class="input-group col-md-12">
-                    <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "listCtrl.keyword" placeholder="Search for a user" />
+                    <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "listUsersCtrl.keyword" placeholder="Search for a user" />
                     <span class="input-group-btn">
                         <button class="btn btn-success usrsrchbtn" type="submit">
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -38,9 +38,9 @@
         <div class="row">
                 <div id="custom-search-input">
                     <div class="input-group col-md-12">
-                        <input id="searchString" type="text" class="form-control input-lg" name="searchString" ng-model = "listCtrl.keyword" size="8" placeholder="Search for a user" />
+                        <input id="searchString" type="text" class="form-control input-lg" name="searchString" ng-model = "listUsersCtrl.keyword" size="8" placeholder="Search for a user" />
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-info btn-lg" ng-click="listCtrl.getList()">
+                            <button type="button" class="btn btn-info btn-lg" ng-click="listUsersCtrl.getList()">
                                 <i class="glyphicon glyphicon-search"></i>
                             </button>
                         </span>
@@ -53,31 +53,32 @@
         <div class="row custyle">
         <table class="table table-striped custab">
             <thead>
-                <!-- <a ng-href="#" ng-click="listCtrl.addUser()" class="btn btn-primary btn-xs addnew pull-right"><span class="glyphicon glyphicon-plus-sign"></span> Add a New Trainer</a>  -->
-                <button type="button" class="btn btn-primary btn-xs addnew pull-left" ng-click="listCtrl.addUser()"><span class="glyphicon glyphicon-plus-sign"></span>Add a User</button>
-                    <tr>
-                        <th>User ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Qualifications</th>
-                        <th class="text-center">Action</th>
-                    </tr>
+                <!-- <a ng-href="#" ng-click="listUsersCtrl.addUser()" class="btn btn-primary btn-xs addnew pull-right"><span class="glyphicon glyphicon-plus-sign"></span> Add a New Trainer</a>  -->
+                <button type="button" class="btn btn-primary btn-xs addnew pull-left" ng-click="listUsersCtrl.addUser()"><span class="glyphicon glyphicon-plus-sign"></span>Add a User</button>
+                <tr>
+                    <th>User ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th class="text-center">Action</th>
+                </tr>
             </thead>
-            <tr ng-repeat="user in listCtrl.users">
+            <tr ng-repeat="user in listUsersCtrl.users">
                 <td>{{ user.id }}</td>
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.email }}</td>
-                <td><span ng-repeat="qualify in user.userqualifies">
-                    [{{ qualify.qualification.q_name }}]</span></td>
-                <td class="text-center">
-                <button type="button" class='btn btn-success btn-xs' ng-click="listCtrl.viewUser(user.id)"><span class="glyphicon glyphicon-eye-open"></span> View Trainer</button>
-                        
-                <!-- <a class='btn btn-success btn-xs' href="#" ng-click="listCtrl.viewUser(user.id)"><span class="glyphicon glyphicon-eye-open"></span> View</a> -->
-                <!-- <button type="button" class='btn btn-info btn-xs' href="#" ng-click="listCtrl.editUser()"><span class="glyphicon glyphicon-edit"></span> Edit</button>
-                <button type="button" class="btn btn-danger btn-xs" href="#"  ng-click="listCtrl.deleteUser()"><span class="glyphicon glyphicon-remove"></span> Delete</button> -->
+                <td>{{ user.role }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                    <button type="button" class='btn btn-success btn-xs' ng-click="listUsersCtrl.viewUser(user.id)"><span class="glyphicon glyphicon-eye-open"></span>View User</button>
                 </td>
+                        
+                <!-- <a class='btn btn-success btn-xs' href="#" ng-click="listUsersCtrl.viewUser(user.id)"><span class="glyphicon glyphicon-eye-open"></span> View</a> -->
+                <!-- <button type="button" class='btn btn-info btn-xs' href="#" ng-click="listUsersCtrl.editUser()"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+                <button type="button" class="btn btn-danger btn-xs" href="#"  ng-click="listUsersCtrl.deleteUser()"><span class="glyphicon glyphicon-remove"></span> Delete</button> -->
             </tr>
         </table>
     </div>

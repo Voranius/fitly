@@ -2,9 +2,15 @@
     var app = angular.module('fitly', ['ui.router']);
 
     app.config(FitlyConfig);
+
     app.service("UserSvc", UserSvc);
+    app.service("ClassSvc", ClassSvc);
+    app.service("BookingSvc", BookingSvc);
+    
     app.controller("LoginCtrl", LoginCtrl);
-    app.controller("ListCtrl", ListCtrl);
+    app.controller("LogoutCtrl", LogoutCtrl);
+
+    app.controller("ListUsersCtrl", ListUsersCtrl);
     app.controller("TrainerDashCtrl", TrainerDashCtrl);
     app.controller("ClientDashCtrl", ClientDashCtrl);
     app.controller("AddUserCtrl", AddUserCtrl);
@@ -15,7 +21,7 @@
     app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
     app.controller("ProfileCtrl", ProfileCtrl);
-    app.controller("LogoutCtrl", LogoutCtrl);
+
     
     // ===================================================================================
     // FitlyConfig to set up various states of the system
@@ -31,7 +37,7 @@
             .state('list', {
                 url: '/list',
                 templateUrl: 'views/list.html',
-                controller: 'ListCtrl as listCtrl'
+                controller: 'ListUsersCtrl as listUsersCtrl'
             })
             .state('traindash', {
                 url: '/traindash',
@@ -272,19 +278,19 @@
 
 
     // ===================================================================================
-    // ListCtrl to handle the central display of users
+    // ListUsersCtrl to handle the central display of users
     // ===================================================================================
-    ListCtrl.$inject = ['$state', 'UserSvc'];
-    function ListCtrl($state, UserSvc) {
-        var listCtrl = this;
+    ListUsersCtrl.$inject = ['$state', 'UserSvc'];
+    function ListUsersCtrl($state, UserSvc) {
+        var listUsersCtrl = this;
 
-        listCtrl.keyword = "";
-        listCtrl.users = {};
+        listUsersCtrl.keyword = "";
+        listUsersCtrl.users = {};
 
         getList = function() {
-            UserSvc.retrieveUsers(listCtrl.keyword)
+            UserSvc.retrieveUsers(listUsersCtrl.keyword)
                 .then(function(users){
-                    listCtrl.users = users.data;
+                    listUsersCtrl.users = users.data;
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
                 });
@@ -293,21 +299,21 @@
         // display initial list of users by default
         getList();
         // assign same functionality to controller
-        listCtrl.getList = getList;
+        listUsersCtrl.getList = getList;
 
-        listCtrl.addUser = function(){
+        listUsersCtrl.addUser = function(){
             $state.go("adduser");
         };
 
-        listCtrl.viewUser = function(userIdToView){
-            $state.go("view", {'userId' : userIdToView});
+        listUsersCtrl.viewUser = function(userIdToView){
+            $state.go("profile", {'userId' : userIdToView});
         };
 
-        listCtrl.editUser = function(userIdToEdit){
+        listUsersCtrl.editUser = function(userIdToEdit){
             $state.go("edit", {'userId' : userIdToEdit});
         };
 
-        listCtrl.deleteUser = function(){
+        listUsersCtrl.deleteUser = function(){
             // have a simple pop-up window to confirm
             // if yes, call UserSvc.deleteUser()
         };
@@ -341,35 +347,35 @@
     };
 
     // ===================================================================================
-    // ViewCtrl to handle viewing of a user
+    // ProfileCtrl to handle viewing of a user
     // ===================================================================================
-    ViewCtrl.$inject = ['$state', '$stateParams', 'UserSvc'];
-    function ViewCtrl($state, $stateParams, UserSvc) {
-        var viewCtrl = this;
+    ProfileCtrl.$inject = ['$state', '$stateParams', 'UserSvc'];
+    function ProfileCtrl($state, $stateParams, UserSvc) {
+        var profileCtrl = this;
 
-        viewCtrl.user = {};
-        viewCtrl.message = "";
+        profileCtrl.user = {};
+        profileCtrl.message = "";
 
         // call by passing id of user to view
         UserSvc.retrieveUserById($stateParams.userId)
             .then(function(user) {
-                viewCtrl.user = user.data;
+                profileCtrl.user = user.data;
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
 
-        viewCtrl.saveUser = function() {
-            UserSvc.updateUser(viewCtrl.user)
+        profileCtrl.saveUser = function() {
+            UserSvc.updateUser(profileCtrl.user)
                 .then(function(items){
-                    viewCtrl.message ="User profile successfully updated in database.";
+                    profileCtrl.message ="User profile successfully updated in database.";
                 }).catch(function(err){
-                    viewCtrl.message ="Error updating to database. Changes not saved.";                    
+                    profileCtrl.message ="Error updating to database. Changes not saved.";                    
                     console.error("Error encountered: ", err);
                 });
         };
 
-        viewCtrl.deleteUser = function() {
-            UserSvc.deleteUser(viewCtrl.user.id)
+        profileCtrl.deleteUser = function() {
+            UserSvc.deleteUser(profileCtrl.user.id)
                 .then(function (result) {
                     // a browser box to inform the user, before switching states
                     alert("User profile successfully removed");
@@ -432,10 +438,22 @@
 
     };
 
-    TrainerRegCtrl.$inject = [];
-    function TrainerRegCtrl() {
+    TrainerRegCtrl.$inject = ['UserSvc'];
+    function TrainerRegCtrl(UserSvc) {
         var trainerRegCtrl = this;
 
+        trainerRegCtrl.user = {};
+        trainerRegCtrl.message = "";
+
+        trainerRegCtrl.register = function () {
+            UserSvc.insertUser(trainerRegCtrl.user)
+                .then(function(user){
+                    trainerRegCtrl.message = "You have been successfully registered.";
+                }).catch(function(err){
+                    trainerRegCtrl.message = "Registration unsuccessful. Possibly duplicate email."
+                    console.error("Error encountered: ", err);
+                });
+        };
     };
 
 })();

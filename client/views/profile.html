@@ -2,7 +2,7 @@
     <div class="container-fluid">
 
         <div class="navbar-header nav navbar-nav navbar-left">
-            <h3>Welcome, {{user.firstname}}</h3>
+            <h3>Welcome, {{profileCtrl.user.firstname}}</h3>
         </div>
 
     </div>
@@ -27,41 +27,41 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Email:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="email" readonly ng-model="viewCtrl.user.email">
+                        <input class="form-control" type="email" readonly ng-model="profileCtrl.user.email">
                     </div>
                 </div>                            
                 <div class="form-group">
                     <label class="col-lg-3 control-label">First name:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="text" ng-model="viewCtrl.user.firstname">
+                        <input class="form-control" type="text" ng-model="profileCtrl.user.firstname">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Last name:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="text"  ng-model="viewCtrl.user.lastname">
+                        <input class="form-control" type="text"  ng-model="profileCtrl.user.lastname">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Gender:</label>
                     <div class="col-lg-8">
-                        <select class="form-control" id="gender" required ng-model="viewCtrl.user.gender">
+                        <select class="form-control" id="gender" required ng-model="profileCtrl.user.gender">
                             <option id="header" ng-value="null">Choose One</option>
-                            <option ng-value="1">Male</option>
-                            <option ng-value="0">Female</option>                            
+                            <option ng-value="M">Male</option>
+                            <option ng-value="F">Female</option>                            
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-3 control-label">Age:</label>
                     <div class="col-lg-8">
-                        <input class="form-control" type="number"  ng-model="viewCtrl.user.age">
+                        <input class="form-control" type="number"  ng-model="profileCtrl.user.age">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-3 control-label">Status:</label>
                     <div class="col-md-8">
-                        <select class="form-control" id="status" required ng-model="viewCtrl.user.status">
+                        <select class="form-control" id="status" required ng-model="profileCtrl.user.status">
                             <option id="header" ng-value="null">Choose One</option>
                             <option ng-value="1">Active</option>
                             <option ng-value="0">Unavailable</option>
@@ -73,22 +73,22 @@
                 <!-- <div class="form-group">
                     <label class="col-md-3 control-label">Qualifications:</label>
                     <div class="col-md-8">
-                        <input class="form-control" type="text"  ng-model="viewCtrl.user.qualifications">
+                        <input class="form-control" type="text"  ng-model="profileCtrl.user.qualifications">
                     </div>
                 </div> -->
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>
                     <div class="col-md-8">
                             <!-- <a class='btn btn-success btn-xs' href="#" ng-click="listCtrl.saveUser()"> Save</a> -->
-                            <button type="button" class='btn btn-success btn-xs' ng-click="viewCtrl.saveUser()">Save</button>
+                            <button type="button" class='btn btn-success btn-xs' ng-click="profileCtrl.saveUser()">Save</button>
                             <a class='btn btn-info btn-xs' ui-sref="list"> Cancel</a>
-                            <!-- <button type="button" class="btn btn-danger btn-xs" ng-click="viewCtrl.deleteUser()">Delete</button> -->
+                            <!-- <button type="button" class="btn btn-danger btn-xs" ng-click="profileCtrl.deleteUser()">Delete</button> -->
                             
-                            <!-- <a class="btn btn-danger btn-xs" href="#"  ng-click="listCtrl.deleteUser()"> Delete</a></td> -->
+                            <!-- <a class="btn btn-danger btn-xs" href="#"  ng-click="profileCtrl.deleteUser()"> Delete</a></td> -->
                     </div>
                 </div>
             </form>
         </div>
-        <div ng-show="viewCtrl.message">{{ viewCtrl.message }}</div>
+        <div ng-show="profileCtrl.message">{{ profileCtrl.message }}</div>
     </div>
 </div>

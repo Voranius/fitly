@@ -2,13 +2,13 @@
     <div class="col-sm-2 col-lg-4"></div>
     <div class="col-sm-8 col-lg-4">
         <h1 class="brand-light">Trainer Registration</h1>
-        <form name="clientForm" ng-submit="trainerregCtrl.register()">
+        <form name="clientForm" ng-submit="trainerRegCtrl.register()">
             <div class="form-group">
                 <div class="input-group">
                 <div class="input-group-addon">
                 <i class="fa fa-envelope-o"></i> 
                 </div>
-                <input class="form-control" id="email" name="email" type="email" placeholder="Email" ng-model="trainerregCtrl.user.email"/>
+                <input class="form-control" id="email" name="email" type="email" placeholder="Email" ng-model="trainerRegCtrl.user.email"/>
                 </div>
             </div>
 
@@ -17,7 +17,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
                 </div>
-                <input class="form-control" id="password" name="password" type="password" placeholder="Password" ng-model="trainerregCtrl.user.password"/>
+                <input class="form-control" id="password" name="password" type="password" placeholder="Password" ng-model="trainerRegCtrl.user.password"/>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
                 </div>
-                <input class="form-control" id="password" name="password" type="password" placeholder="Verify Password" ng-model="trainerregCtrl.user.password"/>
+                <input class="form-control" id="password" name="password" type="password" placeholder="Verify Password" ng-model="trainerRegCtrl.user.confirmpassword"/>
                 </div>
             </div>
 
@@ -35,7 +35,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-sticky-note"></i> 
                 </div>
-                <input class="form-control" id="firstname" name="firstname" type="text" placeholder="First Name" ng-model="trainerregCtrl.user.firstname"/>
+                <input class="form-control" id="firstname" name="firstname" type="text" placeholder="First Name" ng-model="trainerRegCtrl.user.firstname"/>
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-sticky-note-o"></i> 
                 </div>
-                <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Last Name" ng-model="trainerregCtrl.user.lastname"/>
+                <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Last Name" ng-model="trainerRegCtrl.user.lastname"/>
                 </div>
             </div>
 
@@ -52,6 +52,6 @@
                 <button type="submit" class="btn btn-primary sign-in pull-right">Register</button>
             </div>
         </form>
-        <!-- <div ng-show="trainerregCtrl.message">{{ trainerregCtrl.message }}</div> -->
+        <!-- <div ng-show="trainerRegCtrl.message">{{ trainerRegCtrl.message }}</div> -->
     </div>
 </div>
