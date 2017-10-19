@@ -1,34 +1,33 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
-
+    
         <div class="navbar-header nav navbar-nav navbar-left">
             <h3>Welcome, {{user.firstname}}</h3>
         </div>
-
+    
     </div>
 </nav>
     
 <div>
     <h4 class="sah4">Create a New Class</h4>
 </div>
-
-<div class="col-sm-2 col-lg-4"></div>
-<div class="col-sm-8 col-lg-4">
-<form name="addClassForm" ng-submit="addclassCtrl.addClass()">
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" required ng-model="addclassCtrl.class.name"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" required ng-model="addclassCtrl.class.details"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <select class="form-control" id="category" required ng-model="addclassCtrl.class.category" ng-init="addclassCtrl.class.category = null">
+      
+      
+<div class="container">
+    <div class="row">
+        <form name="addClassForm" ng-submit="addclassCtrl.addClass()">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="classname">Class Name</label>
+                <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" required ng-model="addclassCtrl.class.name"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="details">Class Details</label>
+                <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" required ng-model="addclassCtrl.class.details"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" required ng-model="addclassCtrl.class.category" ng-init="addclassCtrl.class.category = null">
                     <option ng-value="null" hidden>Category</option>
                     <option>Crossfit</option>
                     <option>Core</option>
@@ -36,63 +35,67 @@
                     <option>MMA</option>
                     <option>Aerobics</option>
                     <option>Boxing</option>
-            </select>
-    </div>
+                </select>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="district">District</label>
+                <input class="form-control" id="neighbourhood" name="neighbourhood" type="text" placeholder="District or neighbourhood (i.e, Bedok, Tampines)" required ng-model="addclassCtrl.class.neighbourhood"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="address">Address</label>
+                <input class="form-control" id="address" name="address" type="text" placeholder="Address of Class" required ng-model="addclassCtrl.class.address"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="postcode">Postal Code</label>
+                <input class="form-control" id="postcode" name="postcode" type="number" placeholder="Postal Code" min="6" max="6" required ng-model="addclassCtrl.class.postcode"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="datetime">Date and Time of Class</label>
+                <div>
+                <input class="form-control" id='datetimepicker4' name="start_time" type="text" placeholder="Date and Time of Class"  required ng-model="addclassCtrl.class.start_time"/>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                    $('#datetimepicker4').datetimepicker();
+                });
+                </script>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="duration">Duration of Class</label>
+                <input class="form-control" id="duration" name="duration" type="number" placeholder="Duration of Class" min="1" max="11" required ng-model="addclassCtrl.class.duration"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="minsize">Minimum Class Size</label>
+                <input class="form-control" id="minsize" name="minsize" type="number" placeholder="Minimum Class Size" min="1" max="100" required ng-model="addclassCtrl.class.minsize"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="maxsize">Maximum Class Size</label>
+                <input class="form-control" id="maxsize" name="maxsize" type="number" placeholder="Maximum Class Size" min="1" max="100" required ng-model="addclassCtrl.class.maxsize"/>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <label for="remarks">Remarks</label>
+                <textarea class="form-control" rows="5" id="instructions" name="instructions" type="text" placeholder="Remarks (i.e, bring your own towel)"  ng-model="addclassCtrl.class.instructions"></textarea>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <button type="submit" class="btn btn-block btn-success add-new">Create New Class</button>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <button type="button" class="btn btn-block btn-danger" ui-sref="traindash">Cancel</button>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <button type="button" class="btn btn-block btn-info" ng-show="addclassCtrl.message" ng-click="addclassCtrl.addAnother()">Add Another</button>
+            </div>
+        </form>
+        <div class="clearfix"></div>
 
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="address" name="address" type="text" placeholder="Address of Class" required ng-model="addclassCtrl.class.address"/>
-        </div>
+        <br /><br />
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <div ng-show="addclassCtrl.message">{{ addclassCtrl.message }}</div>
+            </div>
     </div>
-
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="postcode" name="postcode" type="number" placeholder="Postal Code" min="6" max="6" required ng-model="addclassCtrl.class.postcode"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="neighbourhood" name="neighbourhood" type="text" placeholder="District or neighbourhood (i.e, Bedok, Tampines)" required ng-model="addclassCtrl.class.neighbourhood"/>
-        </div>
-    </div>
-
-    <div class='form-group'>
-      <div>
-        <input class="form-control" id='datetimepicker4' name="start_time" type="text" placeholder="Date and Time of Class"  required ng-model="addclassCtrl.class.start_time"/>
-      </div>
-      <script type="text/javascript">
-        $(function () {
-          $('#datetimepicker4').datetimepicker();
-      });
-      </script>
-    </div>
-
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="minsize" name="minsize" type="number" placeholder="Minimum Class Size" min="1" max="100" required ng-model="addclassCtrl.class.minsize"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div>
-            <input class="form-control" id="maxsize" name="maxsize" type="number" placeholder="Maximum Class Size" min="1" max="100" required ng-model="addclassCtrl.class.maxsize"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div>
-            <textarea class="form-control" rows="5" id="instructions" name="instructions" type="text" placeholder="Remarks (i.e, bring your own towel)"  ng-model="addclassCtrl.class.instructions"></textarea>
-        </div>
-    </div>
-
-    <div>
-        <button type="submit" class="btn btn-block btn-success add-new">Add New Trainer</button>
-        <button type="button" class="btn btn-block btn-danger" ui-sref="list">Cancel</button>
-        <button type="button" class="btn btn-block btn-info" ng-show="addclassCtrl.message" ng-click="addclassCtrl.addAnother()">Add Another</button>
-        
-    </div>
-</form>
-<div ng-show="addclassCtrl.message">{{ addclassCtrl.message }}</div>
-
 </div>
