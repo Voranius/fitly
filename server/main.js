@@ -285,7 +285,7 @@ app.post("/api/users", function (req, res) {
             status: req.body.user.status        // To validate. 1: Active, 0: Inactive, 2: Unavailable
         }})
             .spread(function(user, created) {
-                console.log("Value of user added: ", user);
+                // console.log("Value of user added: ", user);
                 // if user is successfully created
                 if(created) {
                     // good security practise dictates that we reset the password
@@ -467,12 +467,20 @@ app.get("/api/classes", function (req, res) {
 // RETRIEVE one class
 // Returns full class details
 // Class data: id, name, details, start_time, duration, addr_name, address1, address2, postcode, neighbourhood, minsize, maxsize, instructions, category, creator_id, status
+// Trainer person data: firstname, lastname, gender, age
 app.get("/api/classes/:classId", function (req, res) {
     var classId = parseInt(req.params.classId);
     
     Class.findById(classId, {
         attributes: ['id', 'name', 'details', 'start_time', 'duration', 'addr_name', 'address1', 'address2', 'postcode', 'neighbourhood', 'minsize', 'maxsize', 'instructions', 'category', 'creator_id', 'status'],
-    })
+        include: [{
+            model: Person,
+            attributes: ['firstname', 'lastname', 'gender', 'age']
+        }],
+        limit: 20
+    }
+
+)
         .then(function(result){
             console.log(result.dataValues);
             // start_time in MySQL DATETIME format 2017-11-19T10:00:00.000Z - convert to Unix time
@@ -488,8 +496,9 @@ app.get("/api/classes/:classId", function (req, res) {
 });
 
 // RETRIEVE a trainer's list of classes
+// Accepts search keyword as well
 // Class data: id, name, details, start_time, duration, neighbourhood, category
-// And booking data: id, client_id
+// And list of client booking data: id, client_id
 app.get("/api/bookings/:trainerId", function (req, res) {
     // manipulate variables by setting defaults as well
     var trainerId = parseInt(req.params.trainerId);
@@ -501,20 +510,21 @@ app.get("/api/bookings/:trainerId", function (req, res) {
     Class.findAll({
         attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category'],
         where: {$and: [
-                    { creator_id: trainerId},
-                    {$or: [
-                        {name: {$like: '%' + keyword + '%'}},
-                        {details: {$like: '%' + keyword + '%'}},
-                        {neighbourhood: {$like: '%' + keyword + '%'}},
-                        {category: {$like: '%' + keyword + '%'}}
-                    ]}
-                ]},
-        order: [[sortBy, sortOrder]],
+            { creator_id: trainerId},
+            // searches keyword in class name, details, neighbourhood, category
+            {$or: [
+                {name: {$like: '%' + keyword + '%'}},
+                {details: {$like: '%' + keyword + '%'}},
+                {neighbourhood: {$like: '%' + keyword + '%'}},
+                {category: {$like: '%' + keyword + '%'}}
+            ]}
+        ]},
         // Include Transaction details - bookings for class
         include: [{
             model: Transaction,
             attributes: ['id', 'client_id']
         }],
+        order: [[sortBy, sortOrder]],
         limit: 20
     })
         .then(function(classes){
@@ -591,25 +601,25 @@ app.delete("/api/classes/:classId", function (req, res) {
 // ADD a class
 // Create the full class data
 app.post("/api/classes", function (req, res) {
-    console.log("New class details: ", req.body);
+    console.log("New class details: ", req.body.class);
     
     Class.create({
-        name: req.body.name,
-        details: req.body.details,
-        start_time: moment.unix(req.body.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
-        duration: parseInt(req.body.duration) || 60,  // default to 60 mins
-        addr_name: req.body.addr_name,
-        address1: req.body.address1,
-        address2: req.body.address2,
-        postcode: req.body.postcode,                  // need to validate 6 char?
-        neighbourhood: req.body.neighbourhood,
-        minsize: parseInt(req.body.minsize) || 1,     // default to 1
-        maxsize: parseInt(req.body.maxsize) || 1,     // default to 1
-        instructions: req.body.instructions,
-        category: req.body.category,
-        creator_id: parseInt(req.body.creator_id),
-        // backup_id: parseInt(req.body.backup_id),   // backup trainer not implemented
-        status: parseInt(req.body.status) || 1   
+        name: req.body.class.name,
+        details: req.body.class.details,
+        start_time: moment.unix(req.body.class.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
+        duration: parseInt(req.body.class.duration) || 60,  // default to 60 mins
+        addr_name: req.body.class.addr_name,
+        address1: req.body.class.address1,
+        address2: req.body.class.address2,
+        postcode: req.body.class.postcode,                  // need to validate 6 char?
+        neighbourhood: req.body.class.neighbourhood,
+        minsize: parseInt(req.body.class.minsize) || 1,     // default to 1
+        maxsize: parseInt(req.body.class.maxsize) || 1,     // default to 1
+        instructions: req.body.class.instructions,
+        category: req.body.class.category,
+        creator_id: parseInt(req.body.class.creator_id),
+        // backup_id: parseInt(req.body.class.backup_id),   // backup trainer not implemented
+        status: parseInt(req.body.class.status) || 1   
     }).then(function(result) {
         res.status(200);
         res.type("application/json");
@@ -618,17 +628,18 @@ app.post("/api/classes", function (req, res) {
 });
 
 // RETRIEVE a list of classes booked by a clientId
-// Returns preliminary basic class details
+// Expecting a query string /api/bookings?clientId=NN
+// Returns preliminary basic class details, from earliest to latest class start_time
 // Booking data: id, class_id
 // Class data: id, name, start_time, category, creator_id
 // Trainer person data: firstname, lastname
 app.get("/api/bookings", function (req, res) {
     // manipulate variables by setting defaults as well
     var clientId = req.query.clientId || "";
-    var sortBy = req.query.sortBy || "start_time";
-    var sortOrder = req.query.sortOrder || "ASC";
+    var sortBy = req.query.sortBy || 'start_time';
+    var sortOrder = req.query.sortOrder || 'ASC';
 
-    console.log('Server: Value of clientId: ', clientId);
+    // console.log('Server: Value of clientId: ', clientId);
     Transaction.findAll({
         attributes: ['id', 'class_id'],
         where: {client_id: clientId},
@@ -636,13 +647,14 @@ app.get("/api/bookings", function (req, res) {
         include: [{
             model: Class,
             attributes: ['id', 'name', 'start_time', 'category', 'creator_id'],
-            // where: { id: class_id },
-            order: [[sortBy, sortOrder]],
             include: [{
                 model: Person,
                 attributes: ['firstname', 'lastname']                
             }],
         }],
+        order: [
+            [{ model: Class}, sortBy, sortOrder]
+        ],        
         limit: 20
     })
         .then(function(bookings){
