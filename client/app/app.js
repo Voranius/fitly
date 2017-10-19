@@ -30,6 +30,11 @@
                 templateUrl: 'views/trainerdash.html',
                 controller: 'TrainerDashCtrl as trainerdashCtrl'
             })
+            .state('clientdash', {
+                url: '/clientdash',
+                templateUrl: 'views/clientdash.html',
+                controller: 'ClientDashCtrl as clientdashCtrl'
+            })
             .state('add', {
                 url:'/add',
                 templateUrl: 'views/add.html',
@@ -40,6 +45,16 @@
                 templateUrl: 'views/addclass.html',
                 controller: 'AddClassCtrl as addclassCtrl'
             })
+            .state('viewclass', {
+                url:'/viewclass/:classId',
+                templateUrl: 'views/viewclass.html',
+                controller: 'ViewClassCtrl as viewclassCtrl'
+            })
+            .state('editclass', {
+                url:'/editclass/:classId',
+                templateUrl: 'views/editclass.html',
+                controller: 'EditClassCtrl as editclassCtrl'
+            })
             .state('clientreg', {
                 url:'/clientreg',
                 templateUrl: 'views/clientreg.html',
@@ -49,6 +64,11 @@
                 url:'/trainerreg',
                 templateUrl: 'views/trainerreg.html',
                 controller: 'TrainerRegCtrl as trainerregCtrl'
+            })
+            .state('profile', {
+                url:'/profile/:userId',
+                templateUrl: 'views/profile.html',
+                controller: 'ViewCtrl as viewCtrl'
             })
             .state('view', {
                 url:'/view/:userId',

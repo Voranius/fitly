@@ -9,7 +9,7 @@
 </nav>
     
 <div>
-    <h4 class="sah4">Create a New Class</h4>
+    <h4 class="sah4">Edit Class</h4>
 </div>
       
       
@@ -82,20 +82,20 @@
             </div>
             <div class="clearfix"></div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <button type="submit" class="btn btn-block btn-success add-new">Create New Class</button>
+                <button type="submit" class="btn btn-block btn-success add-new" ng-click="editclassCtrl.saveClass()">Save Changes</button>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <button type="button" class="btn btn-block btn-danger" ui-sref="traindash">Cancel</button>
+                <button type="button" class="btn btn-block btn-info" ui-sref="traindash">Cancel Changes</button>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <button type="button" class="btn btn-block btn-info" ng-show="addclassCtrl.message" ng-click="addclassCtrl.addAnother()">Add Another</button>
+                <button type="button" class="btn btn-block btn-danger" ng-click="editclassCtrl.deleteClass()">Delete Class</button>
             </div>
         </form>
         <div class="clearfix"></div>
 
         <br /><br />
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <div ng-show="addclassCtrl.message">{{ addclassCtrl.message }}</div>
+                <div ng-show="editclassCtrl.message">{{ editclassCtrl.message }}</div>
             </div>
     </div>
 </div>
