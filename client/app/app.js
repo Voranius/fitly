@@ -30,6 +30,11 @@
                 templateUrl: 'views/trainerdash.html',
                 controller: 'TrainerDashCtrl as trainerdashCtrl'
             })
+            .state('clientdash', {
+                url: '/clientdash',
+                templateUrl: 'views/clientdash.html',
+                controller: 'ClientDashCtrl as clientdashCtrl'
+            })
             .state('add', {
                 url:'/add',
                 templateUrl: 'views/add.html',
