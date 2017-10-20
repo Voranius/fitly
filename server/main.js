@@ -18,6 +18,7 @@
 // 5. Cancel a class                DELETE /api/bookings
 
 // For TRAINER
+// 1. View created classes          GET /api/classes
 // 1. View upcoming classes         GET /api/bookings/:trainerId
 // 2. View a class                  GET /api/classes/:classId
 // 3. Add a class                   POST /api/classes
@@ -226,7 +227,7 @@ app.post("/signin",
                 // Primarily used when users sign up, during which req.login() can be invoked
                 // to automatically log in newly registered user.
                 req.login(user, function(err) {
-                    console.log("Server: Value of user: ", user);
+                    // console.log("Server: Value of user: ", user);
                     if (err) {
                         return res.status(500).json({err: 'Could not log in user'});
                     } else {
@@ -265,12 +266,12 @@ app.post("/api/users", function (req, res) {
     // verify that confirmation password matches original password keyed in
     // otherwise return an error
     if(!(req.body.user.password === req.body.user.confirmpassword)) {
-        return res.status(500).json({err: err});
+        return res.status(400).json({err: 'Passwords mismatch'});
     }
     // hash up the password before storing
     var hashPassword = bcrypt.hashSync(req.body.user.password, bcrypt.genSaltSync(8), null);
     
-    console.log("Client registration: value of req.body", req.body.user);
+    console.log("Client registration: value of req.body.user", req.body.user);
     
     // version 2 - using sequelize's feature of findOrCreate
     Person.findOrCreate({
@@ -607,7 +608,8 @@ app.post("/api/classes", function (req, res) {
     Class.create({
         name: req.body.class.name,
         details: req.body.class.details,
-        start_time: moment.unix(req.body.class.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
+        // start_time: moment.unix(req.body.class.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
+        start_time: req.body.class.start_time,
         duration: parseInt(req.body.class.duration) || 60,  // default to 60 mins
         addr_name: req.body.class.addr_name,
         address1: req.body.class.address1,
