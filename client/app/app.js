@@ -507,10 +507,28 @@
         var editClassCtrl = this;
     };
 
-    ClientRegCtrl.$inject = [];
-    function ClientRegCtrl() {
+    ClientRegCtrl.$inject = ['UserSvc'];
+    function ClientRegCtrl(UserSvc) {
         var clientRegCtrl = this;
 
+        clientRegCtrl.user = {};
+        clientRegCtrl.message = ""; 
+        clientRegCtrl.user.role = 2;       // setting "Client" role
+        clientRegCtrl.user.status = 1;     // setting status to "Active"
+
+        clientRegCtrl.register = function () {
+            UserSvc.insertUser(clientRegCtrl.user)
+                .then(function(user){
+                    clientRegCtrl.message = "You have been successfully registered.";
+                }).catch(function(err){
+                    console.error("Error encountered: ", err);
+                    
+                    if (err.status == '400')
+                        clientRegCtrl.message = "Passwords entered do not match. Please re-type.";
+                    else      
+                        clientRegCtrl.message = "Registration unsuccessful. Possibly duplicate email.";
+                });
+        };
     };
 
     TrainerRegCtrl.$inject = ['UserSvc'];
