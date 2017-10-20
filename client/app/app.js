@@ -21,7 +21,64 @@
     app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
     app.controller("ProfileCtrl", ProfileCtrl);
+    app.controller("DateTimeCtrl", DateTimeCtrl);
 
+    // ===================================================================================
+    // DateTimePicker directive to initiate ngModel
+    // ===================================================================================
+
+    app.directive('datetimez', function(){
+        return {
+            require: '?ngModel',
+            restrict: 'A',
+            link: function(scope, element, attrs, ngModel){
+                if(!ngModel) return;  
+              
+                ngModel.$render = function(){
+                    element.val( ngModel.$viewValue || '' );
+                };
+              
+                function read() {
+                    var value = element.val();
+                    ngModel.$setViewValue(value);
+                    //console.log(scope.dueDate);
+                }
+                
+                var options = scope.$eval(attrs.datetimez) || {};
+                if(element.next().is('.input-group-addon')) {
+                  var parentElm = $(element).parent();
+                  parentElm.datetimepicker(options);
+              
+                  parentElm.on('dp.change', function(){
+                     scope.$apply(read);
+                  });
+                } else {
+                  element.datetimepicker(options);
+              
+                  element.on('dp.change', function(){
+                     scope.$apply(read);
+                  });
+                }
+              
+                read();
+            }
+        };
+    });
+    
+    // ===================================================================================
+    // DateTimePicker controller
+    // ===================================================================================
+
+    DateTimeCtrl.$inject = [$scope];
+    function DateTimeCtrl($scope) {
+        $scope.datePickerOptions = { 
+            format : 'YYYY-MM-DD HH:mm:ss'
+         };
+         
+         $scope.$watch('addClassCtrl.class.start_time', function(){
+           console.log($scope.addClassCtrl.class.start_time);
+         });
+    };
     
     // ===================================================================================
     // FitlyConfig to set up various states of the system
@@ -87,6 +144,9 @@
 
             $urlRouterProvider.otherwise('/login');
     };
+
+    
+
 
     // ===================================================================================
     // UserSvc to provide central user-database-related services
