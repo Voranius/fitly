@@ -40,7 +40,7 @@
                 controller: 'ListUsersCtrl as listUsersCtrl'
             })
             .state('traindash', {
-                url: '/traindash',
+                url: '/traindash/:trainerId',
                 templateUrl: 'views/trainerdash.html',
                 controller: 'TrainerDashCtrl as trainerDashCtrl'
             })
@@ -55,7 +55,7 @@
                 controller: 'AddUserCtrl as addUserCtrl'
             })
             .state('addclass', {
-                url:'/addclass',
+                url:'/addclass/:trainerId',
                 templateUrl: 'views/addclass.html',
                 controller: 'AddClassCtrl as addClassCtrl'
             })
@@ -204,6 +204,14 @@
     function ClassSvc($http) {       // ClassService function declaration
         var classSvc = this;
 
+        classSvc.insertClass = function(newClass) {
+            console.log("New class details to insert: ", newClass);
+            return $http({
+                method: 'POST',
+                url: '/api/classes',
+                data: {class: newClass}
+            });
+        };
     };
 
     // ===================================================================================
@@ -212,6 +220,17 @@
     BookingSvc.$inject = ['$http'];    // Inject $http to use built-in service to communicate with server
     function BookingSvc($http) {       // BookingService function declaration
         var bookingSvc = this;
+
+        // retrieveClasses retrieves classes from the server via HTTP GET for one trainerId
+        // Passes information via the query string (params)
+        // Parameters: keyword. Returns: Promise object
+        bookingSvc.retrieveClasses = function(trainerId, keyword){
+            return $http({
+                method: 'GET',
+                url: '/api/bookings/' + trainerId,
+                params: {'keyword': keyword}
+            });
+        };
 
     };
 
@@ -236,7 +255,7 @@
                         if (result.data.user.role == '2')
                             $state.go('clientdash');
                         else if (result.data.user.role == '1')
-                            $state.go('traindash');
+                            $state.go('traindash', {'trainerId' : result.data.user.id});
                         else if (result.data.user.role == '0')
                             $state.go('list');
                     };
@@ -287,7 +306,7 @@
         listUsersCtrl.keyword = "";
         listUsersCtrl.users = {};
 
-        getList = function() {
+        var getList = function() {
             UserSvc.retrieveUsers(listUsersCtrl.keyword)
                 .then(function(users){
                     listUsersCtrl.users = users.data;
@@ -403,10 +422,44 @@
         // then call UserSvc.updateUser to save changes back to server
     };
 
-    TrainerDashCtrl.$inject = [];
-    function TrainerDashCtrl() {
+    TrainerDashCtrl.$inject = ['$state', '$stateParams', 'UserSvc', 'BookingSvc'];
+    function TrainerDashCtrl($state, $stateParams, UserSvc, BookingSvc) {
         var trainerDashCtrl = this;
 
+        trainerDashCtrl.user = "";
+        trainerDashCtrl.keyword = "";
+        trainerDashCtrl.classes = {};
+        trainerId = $stateParams.trainerId;
+        
+        // call by passing id of user to view
+        UserSvc.retrieveUserById(trainerId)
+            .then(function(user) {
+                trainerDashCtrl.user = user.data;
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
+        var getMyClasses = function() {
+            BookingSvc.retrieveClasses(trainerId, trainerDashCtrl.keyword)
+                .then(function(classes){
+                    trainerDashCtrl.classes = classes.data;
+                }).catch(function(err){
+                    console.error("Error encountered: ", err);
+                });
+        };
+
+        // display initial list of users by default
+        getMyClasses();
+        // assign same functionality to controller
+        trainerDashCtrl.getMyClasses = getMyClasses;
+
+        trainerDashCtrl.addClass = function(trainerId) {
+            $state.go("addclass", {'trainerId' : trainerId});
+        };
+
+        trainerDashCtrl.viewClass = function(classId) {
+            $state.go("viewclass", {'classId' : classId});
+        };
     };
 
     ClientDashCtrl.$inject = [];
@@ -415,9 +468,31 @@
 
     };
 
-    AddClassCtrl.$inject = [];
-    function AddClassCtrl() {
+    AddClassCtrl.$inject = ['$state', '$stateParams', 'ClassSvc', 'UserSvc'];
+    function AddClassCtrl($state, $stateParams, ClassSvc, UserSvc) {
         var addClassCtrl = this;
+
+        addClassCtrl.user = {};
+        addClassCtrl.class = {};
+        addClassCtrl.class.creator_id = $stateParams.trainerId;
+
+        // call by passing id of user to view
+        UserSvc.retrieveUserById(addClassCtrl.class.creator_id)
+            .then(function(user) {
+                addClassCtrl.user = user.data;
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
+        addClassCtrl.addClass = function() {
+            ClassSvc.insertClass(addClassCtrl.class)
+                .then(function(user){
+                    addClassCtrl.message = "Class added.";
+                }).catch(function(err){
+                    addClassCtrl.message = "Class not added. Possibly duplicate."
+                    console.error("Error encountered: ", err);
+                });
+        }
 
     };
 
@@ -441,19 +516,26 @@
     TrainerRegCtrl.$inject = ['UserSvc'];
     function TrainerRegCtrl(UserSvc) {
         var trainerRegCtrl = this;
-
+        
         trainerRegCtrl.user = {};
-        trainerRegCtrl.message = "";
+        trainerRegCtrl.message = ""; 
+        trainerRegCtrl.user.role = 1;       // setting "Trainer" role
+        trainerRegCtrl.user.status = 1;     // setting status to "Active"
 
         trainerRegCtrl.register = function () {
             UserSvc.insertUser(trainerRegCtrl.user)
                 .then(function(user){
                     trainerRegCtrl.message = "You have been successfully registered.";
                 }).catch(function(err){
-                    trainerRegCtrl.message = "Registration unsuccessful. Possibly duplicate email."
                     console.error("Error encountered: ", err);
+                    
+                    if (err.status == '400')
+                        trainerRegCtrl.message = "Passwords entered do not match. Please re-type.";
+                    else      
+                        trainerRegCtrl.message = "Registration unsuccessful. Possibly duplicate email.";
                 });
         };
+
     };
 
 })();
