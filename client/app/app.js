@@ -272,6 +272,29 @@
                 data: {class: newClass}
             });
         };
+
+        classSvc.retrieveClassById = function(classId) {
+            return $http({
+                method: 'GET',
+                url: '/api/classes/' + classId
+            });
+        };
+
+        classSvc.updateClass = function(classToUpdate) {
+            console.log("Class details to update: ", classToUpdate);
+            return $http({
+                method: 'PUT',
+                url: '/api/classes/' + classToUpdate.id,
+                data: {class: classToUpdate}
+            });
+        };
+
+        classSvc.deleteClass = function(classId) {
+            return $http({
+                method: 'DELETE',
+                url: '/api/classes/' + classId
+            });
+        };
     };
 
     // ===================================================================================
