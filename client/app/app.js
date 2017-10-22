@@ -526,12 +526,11 @@
             BookingSvc.retrieveClasses(trainerDashCtrl.user.id, trainerDashCtrl.keyword)
                 .then(function(classes){
                     trainerDashCtrl.classes = classes.data;
-                    // console.log("Value of trainerDashCtrl.classes: ", trainerDashCtrl.classes);
                     
-                    // for (var c in trainerDashCtrl.classes) {
-                    //     c.bookingCount = c.transactions.length;
-                    //     console.log("Value of c.transactions: ", c.transactions);
-                    // }
+                    // count the number of clients who have booked each class
+                    for (var c in trainerDashCtrl.classes) {
+                        trainerDashCtrl.classes[c].bookingCount = trainerDashCtrl.classes[c].transactions.length;
+                    }
                     
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
