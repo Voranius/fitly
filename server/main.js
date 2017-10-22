@@ -170,7 +170,7 @@ passport.deserializeUser(function(userId, done) {
     console.log('Whoami: ', userId);
 
     Person.findById(userId, {
-        attributes: ['id', 'firstname', 'lastname', 'email']
+        attributes: ['id', 'firstname', 'lastname', 'email', 'role']
     })
         .then(function(user) {
             if (user) {
@@ -220,7 +220,7 @@ app.post("/signin",
                 };
                 // if authentication failed: invalid email or password
                 if (!user) {
-                    return res.status(401).json({err: info});
+                    res.status(401).json({err: info});
                 };
                 // passport login() call to establish a login session.
                 // authenticate() invokes req.login() automatically
@@ -229,23 +229,23 @@ app.post("/signin",
                 req.login(user, function(err) {
                     // console.log("Server: Value of user: ", user);
                     if (err) {
-                        return res.status(500).json({err: 'Could not log in user'});
+                        res.status(500).json({err: 'Could not log in user'});
                     } else {
                         // values of 'user' will be assigned to req.user
-                        return res.status(200).json({user: req.user, status: 'Login successful!'});
+                        res.status(200).json({user: req.user, status: 'Login successful!'});
                     };
                 });
             })(req, res, next);
 });
 
 // Set up endpoint to check authenticated status of user
-// app.get('/userstatus', function(req, res, next) {
-//     if (req.user) {
-//         next();
-//     } else {
-//         return res.status(500).json({err: 'User not logged in.'});  
-//     }
-// });
+app.get('/userstatus', function(req, res) {
+    if (req.user) {
+        return res.status(200).json({user: req.user});
+    } else {
+        return res.status(500).json({err: 'User not logged in.'});  
+    }
+});
 
 // SIGN-OUT one user
 app.get("/signout", function (req, res) {
@@ -294,7 +294,7 @@ app.post("/api/users", function (req, res) {
                     user.password = "";
                     res.status(201);                // From RESTful Web APIs: Created
                     res.type("application/json");
-                    res.end();
+                    res.json(null);
                 } else {
                     // if email already exists and user was not created, return an error
                     user.password = "";
@@ -321,7 +321,7 @@ app.post("/api/users", function (req, res) {
     //     }).then(function(result) {
     //         res.status(200);
     //         res.type("application/json");
-    //         res.end();
+    //         res.json(result);
     //     });
 });
 
@@ -405,7 +405,7 @@ app.put("/api/users/:userId", function (req, res) {
             .then(function(result){
                 res.status(200);
                 res.type("application/json");
-                res.end();
+                res.json(result);
             }).catch(function(err){
                 res.status(500);
                 res.type("application/json");
@@ -424,7 +424,7 @@ app.delete("/api/users/:userId", function (req, res) {
         .then(function(result){
             res.status(200);
             res.type("application/json");
-            res.end();
+            res.json(result);
         }).catch(function(err){
             res.status(404);
             res.type("application/json");
@@ -510,7 +510,7 @@ app.get("/api/bookings/:trainerId", function (req, res) {
 
     console.log('Server: Value of keyword: ', keyword);
     Class.findAll({
-        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category'],
+        attributes: ['id', 'name', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category','status','createdAt', 'updatedAt'],
         where: {$and: [
             { creator_id: trainerId},
             // searches keyword in class name, details, neighbourhood, category
@@ -573,7 +573,7 @@ app.put("/api/classes/:classId", function (req, res) {
             .then(function(result){
                 res.status(200);
                 res.type("application/json");
-                res.end();
+                res.json(result);
             }).catch(function(err){
                 res.status(500);
                 res.type("application/json");
@@ -592,7 +592,7 @@ app.delete("/api/classes/:classId", function (req, res) {
         .then(function(result){
             res.status(200);
             res.type("application/json");
-            res.end();
+            res.json(result);
         }).catch(function(err){
             res.status(404);
             res.type("application/json");
@@ -626,7 +626,7 @@ app.post("/api/classes", function (req, res) {
     }).then(function(result) {
         res.status(200);
         res.type("application/json");
-        res.end();
+        res.json(result);
     });
 });
 
@@ -693,7 +693,7 @@ app.post("/api/bookings", function (req, res) {
             if(created) {
                 res.status(201);                // From RESTful Web APIs: Created
                 res.type("application/json");
-                res.end();
+                res.json(null);
             } else {
                 res.status(409);                // From Restful Web APIs: Conflict
                 res.type("application/json");
@@ -713,7 +713,7 @@ app.post("/api/bookings", function (req, res) {
     // }).then(function(result) {
     //     res.status(200);
     //     res.type("application/json");
-    //     res.end();
+    //     res.json(result);
     // });
 });
 
@@ -733,7 +733,7 @@ app.delete("/api/bookings", function (req, res) {
         .then(function(result){
             res.status(200);
             res.type("application/json");
-            res.end();
+            res.json(result);
         }).catch(function(err){
             res.status(404);
             res.type("application/json");

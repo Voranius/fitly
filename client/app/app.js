@@ -69,15 +69,22 @@
     // DateTimePicker controller
     // ===================================================================================
 
-    DateTimeCtrl.$inject = [$scope];
+    DateTimeCtrl.$inject = ['$scope'];
     function DateTimeCtrl($scope) {
+
         $scope.datePickerOptions = { 
             format : 'YYYY-MM-DD HH:mm:ss'
-         };
+        };
          
-         $scope.$watch('addClassCtrl.class.start_time', function(){
-           console.log($scope.addClassCtrl.class.start_time);
-         });
+        $scope.$watch('addClassCtrl.class.start_time',
+            function() {
+                console.log($scope.addClassCtrl.class.start_time);
+            });
+
+        $scope.$watch('viewClassCtrl.class.start_time',
+            function() {
+                console.log($scope.viewClassCtrl.class.start_time);
+            });
     };
     
     // ===================================================================================
@@ -97,7 +104,7 @@
                 controller: 'ListUsersCtrl as listUsersCtrl'
             })
             .state('traindash', {
-                url: '/traindash/:trainerId',
+                url: '/traindash',
                 templateUrl: 'views/trainerdash.html',
                 controller: 'TrainerDashCtrl as trainerDashCtrl'
             })
@@ -112,7 +119,7 @@
                 controller: 'AddUserCtrl as addUserCtrl'
             })
             .state('addclass', {
-                url:'/addclass/:trainerId',
+                url:'/addclass',
                 templateUrl: 'views/addclass.html',
                 controller: 'AddClassCtrl as addClassCtrl'
             })
@@ -216,6 +223,7 @@
         // loginUser authenticates the user against server details
         // Parameters: userProfile (email & password). Returns: Promise object!
         userSvc.loginUser = function(userProfile) {
+
             return $http({
                 method: 'POST',
                 url: '/signin',
@@ -225,17 +233,18 @@
                     password: userProfile.password
                 }
             });
+
         };
 
-        // userSvc.isUserLoggedIn = function() {
-        //     return $http({
-        //         method: 'GET',
-        //         url: 'api/users/status'
-        //     });
-        // };
+        userSvc.getUserStatus = function() {
+            return $http({
+                method: 'GET',
+                url: '/userstatus'
+            });
+        };
 
         // userSvc.isUserLoggedIn = function(cb) {
-        //     $http.get('/status/user')
+        //     $http.get('/userstatus/')
         //         .then(function(data) {
         //             user = true;
         //             cb(user);
@@ -270,6 +279,21 @@
                 method: 'POST',
                 url: '/api/classes',
                 data: {class: newClass}
+            });
+        };
+
+        classSvc.retrieveClassById = function(classId) {
+            return $http({
+                method: 'GET',
+                url: '/api/classes/' + classId
+            });
+        };
+
+        classSvc.updateClass = function(classToUpdate) {
+            return $http({
+                method: 'PUT',
+                url: '/api/classes/' + classToUpdate.id,
+                data: {class: classToUpdate}
             });
         };
     };
@@ -315,7 +339,7 @@
                         if (result.data.user.role == '2')
                             $state.go('clientdash');
                         else if (result.data.user.role == '1')
-                            $state.go('traindash', {'trainerId' : result.data.user.id});
+                            $state.go('traindash');
                         else if (result.data.user.role == '0')
                             $state.go('list');
                     };
@@ -482,25 +506,16 @@
         // then call UserSvc.updateUser to save changes back to server
     };
 
-    TrainerDashCtrl.$inject = ['$state', '$stateParams', 'UserSvc', 'BookingSvc'];
-    function TrainerDashCtrl($state, $stateParams, UserSvc, BookingSvc) {
+    TrainerDashCtrl.$inject = ['$state', 'UserSvc', 'BookingSvc'];
+    function TrainerDashCtrl($state, UserSvc, BookingSvc) {
         var trainerDashCtrl = this;
 
         trainerDashCtrl.user = "";
         trainerDashCtrl.keyword = "";
         trainerDashCtrl.classes = {};
-        trainerId = $stateParams.trainerId;
-        
-        // call by passing id of user to view
-        UserSvc.retrieveUserById(trainerId)
-            .then(function(user) {
-                trainerDashCtrl.user = user.data;
-            }).catch(function(err) {
-                console.error("Error: ", err);
-            });
 
         var getMyClasses = function() {
-            BookingSvc.retrieveClasses(trainerId, trainerDashCtrl.keyword)
+            BookingSvc.retrieveClasses(trainerDashCtrl.user.id, trainerDashCtrl.keyword)
                 .then(function(classes){
                     trainerDashCtrl.classes = classes.data;
                 }).catch(function(err){
@@ -508,13 +523,22 @@
                 });
         };
 
-        // display initial list of users by default
-        getMyClasses();
+        // check that user is logged in, get basic user details 
+        UserSvc.getUserStatus()
+            .then(function(user) {
+                trainerDashCtrl.user = user.data.user;
+
+                // display list of trainer's classes
+                getMyClasses();
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
         // assign same functionality to controller
         trainerDashCtrl.getMyClasses = getMyClasses;
 
         trainerDashCtrl.addClass = function(trainerId) {
-            $state.go("addclass", {'trainerId' : trainerId});
+            $state.go("addclass");
         };
 
         trainerDashCtrl.viewClass = function(classId) {
@@ -528,38 +552,96 @@
 
     };
 
-    AddClassCtrl.$inject = ['$state', '$stateParams', 'ClassSvc', 'UserSvc'];
-    function AddClassCtrl($state, $stateParams, ClassSvc, UserSvc) {
+    AddClassCtrl.$inject = ['$state', 'ClassSvc', 'UserSvc'];
+    function AddClassCtrl($state, ClassSvc, UserSvc) {
         var addClassCtrl = this;
 
         addClassCtrl.user = {};
         addClassCtrl.class = {};
-        addClassCtrl.class.creator_id = $stateParams.trainerId;
 
-        // call by passing id of user to view
-        UserSvc.retrieveUserById(addClassCtrl.class.creator_id)
+        // check that user is logged in, get basic user details 
+        UserSvc.getUserStatus()
             .then(function(user) {
-                addClassCtrl.user = user.data;
+                addClassCtrl.user = user.data.user;
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
 
         addClassCtrl.addClass = function() {
-            ClassSvc.insertClass(addClassCtrl.class)
-                .then(function(user){
-                    addClassCtrl.message = "Class added.";
-                }).catch(function(err){
-                    addClassCtrl.message = "Class not added. Possibly duplicate."
-                    console.error("Error encountered: ", err);
-                });
+            // check that current role is authorised to add a class -- not a client
+            if (addClassCtrl.role != 2) {
+                // set the creator_id value to current authorised user
+                addClassCtrl.class.creator_id = addClassCtrl.user.id;
+                ClassSvc.insertClass(addClassCtrl.class)
+                    .then(function(newClass){
+                        addClassCtrl.message = "Class added.";
+                    }).catch(function(err){
+                        addClassCtrl.message = "Class not added. Possibly duplicate."
+                        console.error("Error encountered: ", err);
+                    });
+            }
         }
 
+        addClassCtrl.cancel = function() {
+            $state.go('traindash');            
+        };
+
+        addClassCtrl.addAnother = function() {
+            addClassCtrl.class = {};
+        };
     };
 
-    ViewClassCtrl.$inject = [];
-    function ViewClassCtrl() {
+    ViewClassCtrl.$inject = ['$state', '$stateParams', 'UserSvc', 'ClassSvc'];
+    function ViewClassCtrl($state, $stateParams, UserSvc, ClassSvc) {
         var viewClassCtrl = this;
 
+        viewClassCtrl.user = {};
+        viewClassCtrl.class = {};
+        viewClassCtrl.message = "";
+        classId = $stateParams.classId;
+
+        // check that user is logged in, get basic user details 
+        UserSvc.getUserStatus()
+            .then(function(user) {
+                viewClassCtrl.user = user.data.user;
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
+        // call by passing id of class to view
+        ClassSvc.retrieveClassById(classId)
+            .then(function(myClass) {
+                viewClassCtrl.class =  myClass.data;
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
+        viewClassCtrl.updateClass = function() {
+            ClassSvc.updateClass(viewClassCtrl.class)
+                .then(function(results){
+                    viewClassCtrl.message ="Class details successfully updated in database.";
+                }).catch(function(err){
+                    viewClassCtrl.message ="Error updating to database. Changes not saved.";                    
+                    console.error("Error encountered: ", err);
+                });
+        };
+
+        viewClassCtrl.deleteClass = function() {
+
+        };
+
+        viewClassCtrl.cancel = function() {
+            if (viewClassCtrl.user.role == 1)
+                $state.go('traindash');
+            else if (viewClassCtrl.user.role == 2)
+                $state.go('clientdash');
+            // else if (viewClassCtrl.user.role == 0)
+            //     $state.go('admindash');
+        };
+
+        viewClassCtrl.cancelBooking = function() {
+
+        };
     };
 
     EditClassCtrl.$inject = [];

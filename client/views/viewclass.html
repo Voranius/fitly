@@ -2,7 +2,7 @@
     <div class="container-fluid">
     
         <div class="navbar-header nav navbar-nav navbar-left">
-            <h3>Welcome, {{user.firstname}}</h3>
+            <h3>Welcome, {{viewClassCtrl.user.firstname}}</h3>
         </div>
     
     </div>
@@ -15,71 +15,114 @@
       
 <div class="container">
     <div class="row">
-        <form name="viewClassForm" ng-submit="viewclassCtrl.viewClass()">
+        <form name="viewClassForm" ng-submit="viewClassCtrl.updateClass()">
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="classname">Class Name</label>
-                <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" readonly ng-model="viewclassCtrl.class.name"/>
+                <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" ng-model="viewClassCtrl.class.name"/>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="details">Class Details</label>
-                <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" readonly ng-model="viewclassCtrl.class.details"/>
+                <!-- <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" readonly ng-model="viewClassCtrl.class.details"/> -->
+                <textarea form ="viewClassForm" class="form-control" id="details" name="details" rows="4" type="text" wrap="soft" placeholder="Add a description to make your class inviting and discoverable&#10;(e.g. An hour-long brutal X-fit workout to test the limits of your strength, speed and endurance)"  ng-model="viewClassCtrl.class.details"></textarea>
             </div>
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="category">Category</label>
-                <input class="form-control" id="category" name="category" type="text" placeholder="Category" readonly ng-model="viewclassCtrl.class.details"/>                
+                <select class="form-control" id="category" name="category" type="text" placeholder="Category"  ng-model="viewClassCtrl.class.category">
+                    <option>Crossfit</option>
+                    <option>Core</option>
+                    <option>Weights</option>
+                    <option>MMA</option>
+                    <option>Aerobics</option>
+                    <option>Boxing</option>
+                </select>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <label for="district">District</label>
-                <input class="form-control" id="neighbourhood" name="neighbourhood" type="text" placeholder="District or neighbourhood (i.e, Bedok, Tampines)" readonly ng-model="viewclassCtrl.class.neighbourhood"/>
+                <label for="addrname">Name of Venue</label>
+                <input class="form-control" id="addrname" name="addrname" type="text" placeholder="Name of Location (e.g. Studio or Gym name)" ng-model="viewClassCtrl.class.addr_name"/>
             </div>
+
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <label for="address">Address</label>
-                <input class="form-control" id="address" name="address" type="text" placeholder="Address of Class" readonly ng-model="viewclassCtrl.class.address"/>
+                <label for="address1">Address</label>
+                <input class="form-control" id="address1" name="address1" type="text" placeholder="Address line 1" ng-model="viewClassCtrl.class.address1"/>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <label for="postcode">Postal Code</label>
-                <input class="form-control" id="postcode" name="postcode" type="number" placeholder="Postal Code" min="6" max="6" readonly ng-model="viewclassCtrl.class.postcode"/>
+                <label for="address2">Address</label>
+                <input class="form-control" id="address2" name="address2" type="text" placeholder="Address line 2" ng-model="viewClassCtrl.class.address2"/>
             </div>
+
+            <div class="clearfix"></div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="postcode">Postal Code</label>
+                <input class="form-control" id="postcode" name="postcode" type="text" placeholder="Postal Code" ng-model="viewClassCtrl.class.postcode"/>
+            </div>            
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="district">District</label>
+                <input class="form-control" id="neighbourhood" name="neighbourhood" type="text" placeholder="District or neighbourhood (e.g. Bedok, Tampines)" ng-model="viewClassCtrl.class.neighbourhood"/>
+            </div>
+
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="datetime">Date and Time of Class</label>
                 <div>
-                <input class="form-control" id='start_time' name="start_time" type="text" placeholder="Date and Time of Class" readonly ng-model="viewclassCtrl.class.start_time"/>
+                <input class="form-control" id='datetimepicker2' name="datetimepicker2" type="text" datetimez="datePickerOptions" ng-model="viewClassCtrl.class.start_time"/>
                 </div>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <label for="duration">Duration of Class</label>
-                <input class="form-control" id="duration" name="duration" type="number" placeholder="Duration of Class" min="1" max="11" readonly ng-model="viewclassCtrl.class.duration"/>
+                <label for="duration">Duration of Class (in minutes)</label>
+                <input class="form-control" id="duration" name="duration" type="number" min="30" max="180" ng-model="viewClassCtrl.class.duration"/>
             </div>
+
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="minsize">Minimum Class Size</label>
-                <input class="form-control" id="minsize" name="minsize" type="number" placeholder="Minimum Class Size" min="1" max="100" readonly ng-model="viewclassCtrl.class.minsize"/>
+                <input class="form-control" id="minsize" name="minsize" type="number" min="1" max="100" ng-model="viewClassCtrl.class.minsize"/>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="maxsize">Maximum Class Size</label>
-                <input class="form-control" id="maxsize" name="maxsize" type="number" placeholder="Maximum Class Size" min="1" max="100" readonly ng-model="viewclassCtrl.class.maxsize"/>
+                <input class="form-control" id="maxsize" name="maxsize" type="number" min="1" max="100" ng-model="viewClassCtrl.class.maxsize"/>
             </div>
+
             <div class="clearfix"></div>
-            <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="remarks">Remarks</label>
-                <textarea class="form-control" rows="5" id="instructions" name="instructions" type="text" placeholder="Remarks (i.e, bring your own towel)"  readonly ng-model="viewclassCtrl.class.instructions"></textarea>
+                <textarea class="form-control" rows="5" id="instructions" name="instructions" type="text" wrap="soft" placeholder="Remarks (e.g. Bring your own towel, or Ask your doctor if there are any precautions you should take)"  ng-model="viewClassCtrl.class.instructions"></textarea>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="category">Class Status</label>
+                <select class="form-control" id="status" name="status" ng-model="addClassCtrl.class.status">
+                    <option ng-value="1">Active</option>
+                    <option ng-value="0">Unavailable</option>
+                    <option ng-value="2">Inactive</option>
+                </select>
             </div>
             <div class="clearfix"></div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <button type="button" class="btn btn-block btn-info" ui-sref="clientdash">Back to Dashboard</button>
+            <!-- 4 buttons here, displayed based on role
+            if role=trainer, show 'Save' and 'Delete'
+            if role=client, show 'Cancel Booking'
+            'Cancel' button returns user back to the role-based dashboard -->
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <button type="submit" class="btn btn-block btn-info" ng-show="viewClassCtrl.user.role==1">Save Changes</button>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <button type="button" class="btn btn-block btn-danger" ng-click="viewclassCtrl.cancelClass()">Cancel Booking</button>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <button type="button" class="btn btn-block btn-danger"
+                ng-show="viewClassCtrl.user.role==1"
+                ng-click="viewClassCtrl.delete()">Delete</button>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <button type="button" class="btn btn-block btn-danger" ng-show="viewClassCtrl.user.role==2"
+                ng-click="viewClassCtrl.cancelBooking()">Cancel Booking</button>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <button type="button" class="btn btn-block btn-info" ng-click="viewClassCtrl.cancel()">Back to Dashboard</button>
             </div>
         </form>
         <div class="clearfix"></div>
 
         <br /><br />
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <div ng-show="viewclassCtrl.message">{{ viewclassCtrl.message }}</div>
-            </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div ng-show="viewClassCtrl.message">{{ viewClassCtrl.message }}</div>
+        </div>
     </div>
 </div>

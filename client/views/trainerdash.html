@@ -51,26 +51,34 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-4">
+                            <b>Date/Time:</b> {{class.start_time}}
+                        </div>
+                        <div class="col-lg-4">
+                            <b>Duration (minutes):</b> {{class.duration}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
                             <b>Category:</b> {{class.category}}
                         </div>
                         <div class="col-lg-4">
-                            <b>Class Size:</b> {{class.minsize}}/{{class.maxsize}}
+                            <b>Class Size (Min/Max):</b> {{class.minsize}}/{{class.maxsize}}
                         </div>
                         <div class="col-lg-4">
-                            <b>Status:</b> {{class.status}}
+                            <b>District:</b> {{class.neighbourhood}}
                         </div>
                     </div>
                 </div>
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-lg-4">
+                            <b>Status:</b> {{class.status}}
+                        </div>
+                        <div class="col-lg-4">
                             <b>Created:</b> {{class.createdAt}}
                         </div>
                         <div class="col-lg-4">
                             <b>Updated:</b> {{class.updatedAt}}
-                        </div>
-                        <div class="col-lg-4">
-                            <b>District:</b> {{class.neighbourhood}}
                         </div>
                     </div>
                 </div>
