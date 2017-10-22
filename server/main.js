@@ -55,7 +55,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const moment = require('moment');
+// const moment = require('moment');
 // const $q = require('q');
 
 // database requirements & dependencies
@@ -80,6 +80,7 @@ var fitnessDb = new sequelize(
     MYSQL_PASSWORD, // login password
     {
         host: 'localhost',
+        timezone: '+08:00',      // correct UTC+8 timestamp when writing to database
         logging: console.log,
         dialect: 'mysql',
         pool: {
@@ -113,8 +114,6 @@ Transaction.belongsTo(Class, {foreignKey: 'class_id'});
 // To define how we will be authenticating the user locally
 // hardcoded an authenticate user "ken@ken.com" into done(null, "ken@ken.com")
 function authenticateUser(username, password, done) {
-    console.log('1. In authenticateUser');
-    console.log('Whoami: ', username);
 
     // locate user in database based on supplied email address
     Person.findOne({
@@ -157,8 +156,6 @@ passport.use(new LocalStrategy({
 //   this will be as simple as storing the user ID when serializing,
 //   and finding the user by ID when deserializing.
 passport.serializeUser(function(user, done) {
-    console.log('2. In serializeUser');
-    console.log('Whoami: ', user.dataValues.email);
 
     // passing user.id out for deserializer to search database by ID
     done(null, user.dataValues.id);
@@ -166,8 +163,6 @@ passport.serializeUser(function(user, done) {
 
 // deserializer follows by using the id being passed in to confirm user exists in db
 passport.deserializeUser(function(userId, done) {
-    console.log('3. In deserializeUser');
-    console.log('Whoami: ', userId);
 
     Person.findById(userId, {
         attributes: ['id', 'firstname', 'lastname', 'email', 'role']
@@ -227,7 +222,6 @@ app.post("/signin",
                 // Primarily used when users sign up, during which req.login() can be invoked
                 // to automatically log in newly registered user.
                 req.login(user, function(err) {
-                    // console.log("Server: Value of user: ", user);
                     if (err) {
                         res.status(500).json({err: 'Could not log in user'});
                     } else {
@@ -270,9 +264,7 @@ app.post("/api/users", function (req, res) {
     }
     // hash up the password before storing
     var hashPassword = bcrypt.hashSync(req.body.user.password, bcrypt.genSaltSync(8), null);
-    
-    console.log("Client registration: value of req.body.user", req.body.user);
-    
+        
     // version 2 - using sequelize's feature of findOrCreate
     Person.findOrCreate({
         where: {
@@ -287,7 +279,6 @@ app.post("/api/users", function (req, res) {
             status: req.body.user.status        // To validate. 1: Active, 0: Inactive, 2: Unavailable
         }})
             .spread(function(user, created) {
-                // console.log("Value of user added: ", user);
                 // if user is successfully created
                 if(created) {
                     // good security practise dictates that we reset the password
@@ -336,7 +327,6 @@ app.get("/api/users", function (req, res) {
     // var sortBy = req.query.sortBy || "firstname";
     // var sortOrder = req.query.sortOrder || "ASC";
 
-    console.log('Server: Value of keyword: ', keyword);
     Person.findAll({
         attributes: ['id', 'firstname', 'lastname', 'email', 'role', 'status'],
         // where: { firstname: {$like: '%'+keyword+'%'}},
@@ -369,7 +359,6 @@ app.get("/api/users/:userId", function (req, res) {
         attributes: ['id', 'email', 'firstname', 'lastname', 'gender', 'age', 'id_num', 'id_type', 'role', 'status']
     })
         .then(function(result){
-            console.log(result.dataValues);
             res.status(200);
             res.type("application/json");
             res.json(result.dataValues);
@@ -385,8 +374,6 @@ app.get("/api/users/:userId", function (req, res) {
 // User data: firstname, lastname, gender, age, id_num, id_type, status
 app.put("/api/users/:userId", function (req, res) {
     var userId = parseInt(req.params.userId);
-    console.log("value of UsedId: ", userId);
-    console.log("value of user details", req.body.user);
     
     Person.update(
         {
@@ -442,7 +429,6 @@ app.get("/api/classes", function (req, res) {
     var sortBy = req.query.sortBy || "start_time";
     var sortOrder = req.query.sortOrder || "ASC";
 
-    console.log('Server: Value of keyword: ', keyword);
     Class.findAll({
         attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category'],
         where: {$or: [
@@ -480,13 +466,10 @@ app.get("/api/classes/:classId", function (req, res) {
             attributes: ['firstname', 'lastname', 'gender', 'age']
         }],
         limit: 20
-    }
-
-)
+    })
         .then(function(result){
-            console.log(result.dataValues);
             // start_time in MySQL DATETIME format 2017-11-19T10:00:00.000Z - convert to Unix time
-            result.dataValues.start_time = moment(result.dataValues.start_time).unix();
+            // result.dataValues.start_time = moment(result.dataValues.start_time).unix();
             res.status(200);
             res.type("application/json");
             res.json(result.dataValues);    
@@ -508,7 +491,6 @@ app.get("/api/bookings/:trainerId", function (req, res) {
     var sortBy = req.query.sortBy || "start_time";
     var sortOrder = req.query.sortOrder || "ASC";
 
-    console.log('Server: Value of keyword: ', keyword);
     Class.findAll({
         attributes: ['id', 'name', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category','status','createdAt', 'updatedAt'],
         where: {$and: [
@@ -546,14 +528,13 @@ app.get("/api/bookings/:trainerId", function (req, res) {
 // Class data: name, details, start_time, duration, addr_name, address1, address2, postcode, neighbourhood, minsize, maxsize, instructions, category, status
 app.put("/api/classes/:classId", function (req, res) {
     var classId = parseInt(req.params.classId);
-    console.log("value of classId: ", classId);
-    console.log("value of class details", req.body.class);
     
     Class.update(
         {
             name: req.body.class.name,
             details: req.body.class.details,
-            start_time: moment.unix(req.body.class.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
+            // start_time: moment.unix(req.body.class.start_time).format('YYYY-MM-DD HH:mm:ss'),  // start_time in MySQL DATETIME format 2017-11-19 10:00:00
+            start_time: req.body.class.start_time,
             duration: parseInt(req.body.class.duration) || 60,  // default to 60 mins
             addr_name: req.body.class.addr_name,
             address1: req.body.class.address1,
@@ -585,6 +566,7 @@ app.put("/api/classes/:classId", function (req, res) {
 app.delete("/api/classes/:classId", function (req, res) {
     var classId = parseInt(req.params.classId);
 
+    // v1: assumes class can be deleted without checking whether there are current bookings
     Class.destroy({
         // soft delete; check deleteAt column for timestamp
         where: {id: classId}
@@ -603,7 +585,6 @@ app.delete("/api/classes/:classId", function (req, res) {
 // ADD a class
 // Create the full class data
 app.post("/api/classes", function (req, res) {
-    console.log("New class details: ", req.body.class);
     
     Class.create({
         name: req.body.class.name,
@@ -688,7 +669,6 @@ app.post("/api/bookings", function (req, res) {
         }
     })
         .spread(function(tx, created) {
-            // console.log("Value of transaction added: ", tx);
             // if transaction is successfully inserted
             if(created) {
                 res.status(201);                // From RESTful Web APIs: Created
@@ -720,8 +700,6 @@ app.post("/api/bookings", function (req, res) {
 // CANCEL one booking
 // Accepts class_id & client_id to cancel booking
 app.delete("/api/bookings", function (req, res) {
-    // var classId = parseInt(req.params.classId);
-    console.log("Booking to delete: ", req.body);
 
     Transaction.destroy({
         // soft delete; check deleteAt column for timestamp

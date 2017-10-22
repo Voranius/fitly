@@ -21,6 +21,10 @@
                 <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" ng-model="viewClassCtrl.class.name"/>
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <label for="trainername">Trainer's Name</label>
+                <input class="form-control" id="trainername" name="trainername" type="text" readonly placeholder="Trainer's Name" ng-model="viewClassCtrl.class.person.firstname"/>
+            </div>
+            <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="details">Class Details</label>
                 <!-- <input class="form-control" id="details" name="details" type="text" placeholder="Class Details" readonly ng-model="viewClassCtrl.class.details"/> -->
                 <textarea form ="viewClassForm" class="form-control" id="details" name="details" rows="4" type="text" wrap="soft" placeholder="Add a description to make your class inviting and discoverable&#10;(e.g. An hour-long brutal X-fit workout to test the limits of your strength, speed and endurance)"  ng-model="viewClassCtrl.class.details"></textarea>
@@ -91,7 +95,7 @@
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="category">Class Status</label>
-                <select class="form-control" id="status" name="status" ng-model="addClassCtrl.class.status">
+                <select class="form-control" id="status" name="status" ng-model="viewClassCtrl.class.status">
                     <option ng-value="1">Active</option>
                     <option ng-value="0">Unavailable</option>
                     <option ng-value="2">Inactive</option>
@@ -108,7 +112,7 @@
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <button type="button" class="btn btn-block btn-danger"
                 ng-show="viewClassCtrl.user.role==1"
-                ng-click="viewClassCtrl.delete()">Delete</button>
+                ng-click="viewClassCtrl.deleteClass()">Delete</button>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <button type="button" class="btn btn-block btn-danger" ng-show="viewClassCtrl.user.role==2"

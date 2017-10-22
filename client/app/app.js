@@ -73,7 +73,8 @@
     function DateTimeCtrl($scope) {
 
         $scope.datePickerOptions = { 
-            format : 'YYYY-MM-DD HH:mm:ss'
+            format : 'YYYY-MM-DD HH:mm:ss',
+            timeZone: 'Asia/Singapore'
         };
          
         $scope.$watch('addClassCtrl.class.start_time',
@@ -294,6 +295,13 @@
                 method: 'PUT',
                 url: '/api/classes/' + classToUpdate.id,
                 data: {class: classToUpdate}
+            });
+        };
+        
+        classSvc.deleteClass = function(classId) {
+            return $http({
+                method: 'DELETE',
+                url: '/api/classes/' + classId
             });
         };
     };
@@ -518,6 +526,13 @@
             BookingSvc.retrieveClasses(trainerDashCtrl.user.id, trainerDashCtrl.keyword)
                 .then(function(classes){
                     trainerDashCtrl.classes = classes.data;
+                    // console.log("Value of trainerDashCtrl.classes: ", trainerDashCtrl.classes);
+                    
+                    // for (var c in trainerDashCtrl.classes) {
+                    //     c.bookingCount = c.transactions.length;
+                    //     console.log("Value of c.transactions: ", c.transactions);
+                    // }
+                    
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
                 });
@@ -627,7 +642,14 @@
         };
 
         viewClassCtrl.deleteClass = function() {
-
+            ClassSvc.deleteClass(classId)
+                .then(function (result) {
+                    // a browser box to inform the user, before switching states
+                    alert("Class successfully removed");
+                    $state.go("traindash");
+                }).catch(function (err) {
+                    console.error("Error: ", err);
+                });
         };
 
         viewClassCtrl.cancel = function() {
