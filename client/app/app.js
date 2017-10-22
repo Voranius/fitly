@@ -298,7 +298,6 @@
                 data: {class: classToUpdate}
             });
         };
-        
         classSvc.deleteClass = function(classId) {
             return $http({
                 method: 'DELETE',
