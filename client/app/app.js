@@ -290,10 +290,18 @@
         };
 
         classSvc.updateClass = function(classToUpdate) {
+            console.log("Class details to update: ", classToUpdate);
             return $http({
                 method: 'PUT',
                 url: '/api/classes/' + classToUpdate.id,
                 data: {class: classToUpdate}
+            });
+        };
+
+        classSvc.deleteClass = function(classId) {
+            return $http({
+                method: 'DELETE',
+                url: '/api/classes/' + classId
             });
         };
     };
