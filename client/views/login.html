@@ -2,6 +2,7 @@
     <div class="col-sm-2 col-lg-4"></div>
     <div class="col-sm-8 col-lg-4">
         <h1 class="brand-light">Log In</h1>
+        <hr class="style13">
         <form name="loginForm" ng-submit="loginCtrl.login()">
             <div class="form-group">
                 <div class="input-group">
@@ -25,12 +26,16 @@
                 <!-- <div class="checkbox">
                         <label><input type="checkbox" value="">Remember Me</label>
                 </div> -->
-                <button type="submit" class="btn btn-primary sign-in pull-right">Log In</button>
+                <button type="submit" class="btn btn-primary sign-in pull-right loginbtn">Log In</button>
             </div>
         </form>
         <div ng-show="loginCtrl.message">{{ loginCtrl.message }}</div>
             
         <div class="register row">
+            <div class="row">
+                <h1 class="acct">Create an account</h1>
+            </div>
+            <hr class="style14">
             <button ui-sref="clientreg" class="btn btn-success sign-in pull-left clientbtn">Sign Up as Client</button>
             <button ui-sref="trainerreg" class="btn btn-warning sign-in pull-right trainerbtn">Sign Up as Trainer</button>
         </div>

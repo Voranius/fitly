@@ -218,7 +218,7 @@ a.article, a.article:hover {
 
 .brand-light {
     margin-top: 140px;
-    margin-bottom: 50px;
+    /* margin-bottom: 50px; */
 }
 
 .btn-primary {
@@ -235,6 +235,28 @@ a.article, a.article:hover {
 
 .trainerbtn {
     margin-right: 15px;
+}
+
+.loginbtn {
+    width: 146px;
+}
+
+hr.style13 {
+	height: 10px;
+	border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}
+
+hr.style14 {
+	height: 10px;
+	border: 0;
+    box-shadow: 0 10px 10px -10px #8c8b8b inset;
+    width: 95%;
+}
+
+.acct {
+    margin-left: 27px;
+    margin-bottom: -1px;
 }
 
 /* ---------------------------------------------------
