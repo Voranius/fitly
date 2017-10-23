@@ -290,6 +290,14 @@
             });
         };
 
+        classSvc.retrieveAllClasses = function(keyword) {
+            return $http({
+                method: 'GET',
+                url: '/api/classes',
+                params: {'keyword': keyword}
+            });
+        };
+
         classSvc.updateClass = function(classToUpdate) {
             console.log("Class details to update: ", classToUpdate);
             return $http({
@@ -514,6 +522,10 @@
         // then call UserSvc.updateUser to save changes back to server
     };
 
+    // ===================================================================================
+    // TrainerDashCtrl
+    // ===================================================================================
+
     TrainerDashCtrl.$inject = ['$state', 'UserSvc', 'BookingSvc'];
     function TrainerDashCtrl($state, UserSvc, BookingSvc) {
         var trainerDashCtrl = this;
@@ -560,11 +572,51 @@
         };
     };
 
-    ClientDashCtrl.$inject = [];
-    function ClientDashCtrl() {
+    // ===================================================================================
+    // ClientDashCtrl
+    // ===================================================================================
+
+    ClientDashCtrl.$inject = ['$state', 'UserSvc', 'ClassSvc'];
+    function ClientDashCtrl($state, UserSvc, ClassSvc) {
         var clientDashCtrl = this;
 
+        clientDashCtrl.user = "";
+        clientDashCtrl.keyword = "";
+        clientDashCtrl.classes = {};
+
+        var getAllClasses = function() {
+            ClassSvc.retrieveAllClasses(clientDashCtrl.keyword)
+                .then(function(classes){
+                    clientDashCtrl.classes = classes.data;
+                    
+                }).catch(function(err){
+                    console.error("Error encountered: ", err);
+                });
+        };
+
+        // check that user is logged in, get basic user details 
+        UserSvc.getUserStatus()
+            .then(function(user) {
+                clientDashCtrl.user = user.data.user;
+
+                // display list of classes
+                getAllClasses();
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
+        // assign same functionality to controller
+        clientDashCtrl.getAllClasses = getAllClasses;
+
+        clientDashCtrl.viewClass = function(classId) {
+            $state.go("viewclass", {'classId' : classId});
+        };
+
     };
+
+    // ===================================================================================
+    // AddClassCtrl
+    // ===================================================================================
 
     AddClassCtrl.$inject = ['$state', 'ClassSvc', 'UserSvc'];
     function AddClassCtrl($state, ClassSvc, UserSvc) {
@@ -604,6 +656,10 @@
             addClassCtrl.class = {};
         };
     };
+
+    // ===================================================================================
+    // ViewClassCtrl
+    // ===================================================================================
 
     ViewClassCtrl.$inject = ['$state', '$stateParams', 'UserSvc', 'ClassSvc'];
     function ViewClassCtrl($state, $stateParams, UserSvc, ClassSvc) {
@@ -665,10 +721,18 @@
         };
     };
 
+    // ===================================================================================
+    // EditClassCtrl
+    // ===================================================================================
+
     EditClassCtrl.$inject = [];
     function EditClassCtrl() {
         var editClassCtrl = this;
     };
+
+    // ===================================================================================
+    // ClientRegCtrl
+    // ===================================================================================
 
     ClientRegCtrl.$inject = ['UserSvc'];
     function ClientRegCtrl(UserSvc) {
@@ -693,6 +757,10 @@
                 });
         };
     };
+
+    // ===================================================================================
+    // TrainerRegCtrl
+    // ===================================================================================
 
     TrainerRegCtrl.$inject = ['UserSvc'];
     function TrainerRegCtrl(UserSvc) {

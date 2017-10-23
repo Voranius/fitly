@@ -2,7 +2,7 @@
   <div class="container-fluid">
 
       <div class="navbar-header nav navbar-nav navbar-left">
-              <h3>Welcome, {{user.firstname}}</h3>
+              <h3>Welcome, {{clientDashCtrl.user.firstname}}</h3>
       </div>
 
   </div>
@@ -32,7 +32,7 @@
       </form>
       <!-- End of Search Form -->
 
-      <div class="row" ng-repeat="classes in classesCtrl.classes">
+      <div class="row" ng-repeat="class in clientDashCtrl.classes">
           <div class="panel panel-primary trainer-panel">
               <div class="panel-heading">
                   <div class="row">
@@ -40,7 +40,7 @@
                           <b>{{class.name}}</b>
                       </div>
                       <div class="col-lg-6">
-                          <button type="button" class="btn btn-success btn-xs pull-right" ng-click="clientdashCtrl.viewClass()"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
+                          <button type="button" class="btn btn-success btn-xs pull-right" ng-click="clientDashCtrl.viewClass(class.id)"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
                       </div>
                   </div>
               </div>
@@ -50,7 +50,7 @@
                           <b>Category:</b> {{class.category}}
                       </div>
                       <div class="col-lg-4">
-                          <b>Class Size:</b> {{class.minsize/class.maxsize}}
+                        <b>Class Size (Min/Max):</b> {{class.minsize}}/{{class.maxsize}}
                       </div>
                       <div class="col-lg-4">
                           <b>Status:</b> {{class.status}}
