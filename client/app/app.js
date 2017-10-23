@@ -488,6 +488,7 @@
         UserSvc.retrieveUserById($stateParams.userId)
             .then(function(user) {
                 profileCtrl.user = user.data;
+                $state.go("profile");
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
@@ -500,6 +501,33 @@
                     profileCtrl.message ="Error updating to database. Changes not saved.";                    
                     console.error("Error encountered: ", err);
                 });
+        };
+
+        profileCtrl.cancel = function() {
+            UserSvc.getUserStatus(profileCtrl.user)
+            .then(function(user) {
+                if (result.status == 200) {
+                    if (result.data.user.role == '2')
+                        $state.go('clientdash');
+                    else if (result.data.user.role == '1')
+                        $state.go('traindash');
+                    else if (result.data.user.role == '0')
+                        $state.go('list');
+                };
+            }).catch(function(err) {
+                console.log("Values in err: ", err);
+                // when user does not exist in the system
+                if (err.status == 401) {
+                    profileCtrl.message = "Invalid email or password."                   
+                } else if (err.status == 500) {
+                    profileCtrl.message = "Could not log in user at this time."                                           
+                } else {
+                    // it is some other server-returned error
+                    profileCtrl.message = "Unexpected server error"                                           
+                    console.log("Error: ", err);
+                }
+                $state.go('login');
+            });
         };
 
         profileCtrl.deleteUser = function() {
