@@ -475,14 +475,23 @@
         profileCtrl.user = {};
         profileCtrl.message = "";
 
+        // check that user is logged in, get basic user details 
+        UserSvc.getUserStatus()
+            .then(function(user) {
+                profileCtrl.user = user.data.user;
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+
         // call by passing id of user to view
+        profileCtrl.retrieveUser = function() {
         UserSvc.retrieveUserById($stateParams.userId)
             .then(function(user) {
                 profileCtrl.user = user.data;
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
-
+        };
         profileCtrl.saveUser = function() {
             UserSvc.updateUser(profileCtrl.user)
                 .then(function(items){
