@@ -7,7 +7,6 @@
 
     app.service("UserSvc", UserSvc);
     app.service("ClassSvc", ClassSvc);
-    app.service("BookingSvc", BookingSvc);
     
     app.controller("LoginCtrl", LoginCtrl);
     app.controller("LogoutCtrl", LogoutCtrl);
@@ -23,119 +22,6 @@
     app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
     app.controller("ProfileCtrl", ProfileCtrl);
-    // app.controller("DateTimeCtrl", DateTimeCtrl);
-
-    // ===================================================================================
-    // DateTimePicker directive to initiate ngModel
-    // ===================================================================================
-
-    // app.directive('datetimez', function(){
-    //     return {
-    //         require: '?ngModel',
-    //         restrict: 'A',
-    //         link: function(scope, element, attrs, ngModel){
-    //             if(!ngModel) return;  
-              
-    //             ngModel.$render = function(){
-    //                 element.val( ngModel.$viewValue || '' );
-    //             };
-              
-    //             function read() {
-    //                 var value = element.val();
-    //                 ngModel.$setViewValue(value);
-    //                 //console.log(scope.dueDate);
-    //             }
-                
-    //             var options = scope.$eval(attrs.datetimez) || {};
-    //             if(element.next().is('.input-group-addon')) {
-    //               var parentElm = $(element).parent();
-    //               parentElm.datetimepicker(options);
-              
-    //               parentElm.on('dp.change', function(){
-    //                  scope.$apply(read);
-    //               });
-    //             } else {
-    //               element.datetimepicker(options);
-              
-    //               element.on('dp.change', function(){
-    //                  scope.$apply(read);
-    //               });
-    //             }
-              
-    //             read();
-    //         }
-    //     };
-    // });
-    
-    // ===================================================================================
-    // DateTimePicker controller
-    // ===================================================================================
-
-    // DateTimeCtrl.$inject = ['$scope'];
-    // function DateTimeCtrl($scope) {
-
-    //     $scope.datePickerOptions = { 
-    //         format : 'YYYY-MM-DD HH:mm:ss',
-    //         timeZone: 'Asia/Singapore'
-    //     };
-         
-    //     $scope.$watch('addClassCtrl.class.start_time',
-    //         function() {
-    //             console.log($scope.addClassCtrl.class.start_time);
-    //         });
-
-    //     $scope.$watch('viewClassCtrl.class.start_time',
-    //         function() {
-    //             console.log($scope.viewClassCtrl.class.start_time);
-    //         });
-    // };
-
-    function angulardtp() {
-        return {
-            restrict: "A",
-            require: "ngModel",
-            link: function (scope, element, attrs, ngModelCtrl) {
-                var parent = $(element).parent();
-                // locate the parent of the current element, and enable DateTimePicker
-                // hh:mm enables AM/PM on the UI
-                var dtp = parent.datetimepicker({
-                    format: "YYYY-MM-DD hh:mm A",
-                    showTodayButton: false
-                });
-                // then, if anything changes, set the ng-model value
-                // HH:mm enables 24-hour clock, format corresponds to database DATETIME type
-                dtp.on("dp.change", function (e) {
-                    ngModelCtrl.$setViewValue(moment(e.date).format("YYYY-MM-DD HH:mm"));
-                    scope.$apply();
-                });
-            }
-
-            // restrict: "A",
-            // require: "ngModel",
-            // link: function (scope, elem, attrs, ngModelCtrl) {
-            //     var updateModel = function () {
-            //         scope.$apply(function () {
-            //             ngModelCtrl.$modelValue = elem.val();
-            //         });
-            //     };
-            //     elem.datetimepicker({
-            //         useCurrent: false,
-            //         minuteStepping:5,
-            //         icons: {
-            //             time: 'fa fa-clock-o',
-            //             date: 'fa fa-calendar',
-            //             up:   'fa fa-arrow-up',
-            //             down: 'fa fa-arrow-down'
-            //         }
-            //     });
-
-            //     elem.on("change",function (e) {
-            //         updateModel();
-            //     });
-            // }
-
-        }; // end of return
-    };
 
     // ===================================================================================
     // FitlyConfig to set up various states of the system
@@ -200,6 +86,42 @@
             });
 
             $urlRouterProvider.otherwise('/login');
+    };
+
+    // ===================================================================================
+    // Custom angulardtp directive to ensure that external Bootstrap 3 Datepicker formats
+    // dates correctly interacting between client and MySQL databate DATETIME format
+    // Reference: https://yaplex.com/blog/bootstrap-datetimepicker-with-angularjs 
+    // ===================================================================================
+    function angulardtp() {
+        return {
+            restrict: "A",
+            require: "ngModel",
+            link: function (scope, element, attrs, ngModelCtrl) {
+                var parent = $(element).parent();
+                // locate the parent of the current element, and enable DateTimePicker
+                // hh:mm enables AM/PM on the UI
+                var dtp = parent.datetimepicker({
+                    format: "YYYY-MM-DD hh:mm A",
+                    icons: {
+                        time: 'glyphicon glyphicon-time',
+                        date: 'glyphicon glyphicon-calendar',
+                        up:   'glyphicon glyphicon-arrow-up',
+                        down: 'glyphicon glyphicon-arrow-down',
+                        today: 'glyphicon glyphicon-asterisk'
+                    },
+                    stepping: 5,
+                    showTodayButton: true
+                });
+                // then, if anything changes, set the ng-model value
+                // HH:mm enables 24-hour clock, format corresponds to database DATETIME type
+                // http://eonasdan.github.io/bootstrap-datetimepicker/Events/
+                dtp.on("dp.change", function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.date).format("YYYY-MM-DD HH:mm"));
+                    scope.$apply();
+                });
+            }
+        };
     };
 
     // ===================================================================================
@@ -290,18 +212,6 @@
             });
         };
 
-        // userSvc.isUserLoggedIn = function(cb) {
-        //     $http.get('/userstatus/')
-        //         .then(function(data) {
-        //             user = true;
-        //             cb(user);
-        //         }).catch(function(err) {
-        //             console.log("Error: ", err);     
-        //             user = false;
-        //             cb(user);                    
-        //         });
-        // };
-
         // logoutUser logs out user out of the current session
         // Parameters: none. Returns: Promise object!
         userSvc.logoutUser = function() {
@@ -344,6 +254,17 @@
             });
         };
 
+        // retrieveClasses retrieves classes from the server via HTTP GET for one trainerId
+        // Passes information via the query string (params)
+        // Parameters: keyword. Returns: Promise object
+        classSvc.retrieveClasses = function(trainerId, keyword){
+            return $http({
+                method: 'GET',
+                url: '/api/bookings/' + trainerId,
+                params: {'keyword': keyword}
+            });
+        };
+
         classSvc.updateClass = function(classToUpdate) {
             console.log("Class details to update: ", classToUpdate);
             return $http({
@@ -358,28 +279,19 @@
                 url: '/api/classes/' + classId
             });
         };
-    };
 
-    // ===================================================================================
-    // BookingSvc to provide central booking-database-related services
-    // ===================================================================================
-    BookingSvc.$inject = ['$http'];    // Inject $http to use built-in service to communicate with server
-    function BookingSvc($http) {       // BookingService function declaration
-        var bookingSvc = this;
-
-        // retrieveClasses retrieves classes from the server via HTTP GET for one trainerId
-        // Passes information via the query string (params)
-        // Parameters: keyword. Returns: Promise object
-        bookingSvc.retrieveClasses = function(trainerId, keyword){
+        classSvc.bookClass = function(classId, clientId){
+            console.log("New class booking details: ", classId, clientId);
             return $http({
-                method: 'GET',
-                url: '/api/bookings/' + trainerId,
-                params: {'keyword': keyword}
+                method: 'POST',
+                url: '/api/bookings',
+                data: {
+                    class_id: classId,
+                    client_id: clientId
+                }
             });
         };
-
-    };
-
+    }; // End of ClassSvc
 
     // ===================================================================================
     // LoginCtrl to handle the initial user login
@@ -419,9 +331,8 @@
                     }
                     $state.go('login');
                 });
-
         };
-    };
+    }; // End of LoginCtrl
 
     // ===================================================================================
     // LogoutCtrl to handle logging out on the menu system
@@ -439,8 +350,7 @@
                     console.error("Error encountered while logging out", err);
                 });
         };
-    };
-
+    }; // End of LogoutCtrl
 
     // ===================================================================================
     // ListUsersCtrl to handle the central display of users
@@ -482,7 +392,7 @@
             // have a simple pop-up window to confirm
             // if yes, call UserSvc.deleteUser()
         };
-    };
+    }; // End of ListUsersCtrl
 
     // ===================================================================================
     // AddUserCtrl to handle addition of a new user
@@ -509,7 +419,7 @@
             addUserCtrl.user = {};
             addUserCtrl.message = "";
         };
-    };
+    }; // End of AddUserCtrl
 
     // ===================================================================================
     // ProfileCtrl to handle viewing of a user
@@ -587,7 +497,7 @@
                 });        
         };
 
-    };
+    }; // End of ProfileCtrl
 
     // ===================================================================================
     // EditCtrl to handle editing of a new user
@@ -603,14 +513,14 @@
         // pass returned record to editCtrl.user to automatically populate fields
 
         // then call UserSvc.updateUser to save changes back to server
-    };
+    }; // End of EditCtrl
 
     // ===================================================================================
     // TrainerDashCtrl
     // ===================================================================================
-
-    TrainerDashCtrl.$inject = ['$state', 'UserSvc', 'BookingSvc'];
-    function TrainerDashCtrl($state, UserSvc, BookingSvc) {
+    
+    TrainerDashCtrl.$inject = ['$state', 'UserSvc', 'ClassSvc'];
+    function TrainerDashCtrl($state, UserSvc, ClassSvc) {
         var trainerDashCtrl = this;
 
         trainerDashCtrl.user = "";
@@ -618,7 +528,7 @@
         trainerDashCtrl.classes = {};
 
         var getMyClasses = function() {
-            BookingSvc.retrieveClasses(trainerDashCtrl.user.id, trainerDashCtrl.keyword)
+            ClassSvc.retrieveClasses(trainerDashCtrl.user.id, trainerDashCtrl.keyword)
                 .then(function(classes){
                     trainerDashCtrl.classes = classes.data;
                     
@@ -660,7 +570,7 @@
         trainerDashCtrl.viewClass = function(classId) {
             $state.go("viewclass", {'classId' : classId});
         };
-    };
+    }; // end of TrainerDashCtrl
 
     // ===================================================================================
     // ClientDashCtrl
@@ -744,11 +654,14 @@
             $state.go('traindash');            
         };
 
+        // clear all values and reset the form
         addClassCtrl.addAnother = function() {
             addClassCtrl.class = {};
             addClassCtrl.class.start_time = moment().utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+            // hack to reload the values, as datetimepicker does not want to load new values
+            window.location.reload(false);
         };
-    };
+    }; // end of AddClassCtrl
 
     // ===================================================================================
     // ViewClassCtrl
@@ -810,10 +723,16 @@
             //     $state.go('admindash');
         };
 
-        viewClassCtrl.cancelBooking = function() {
-
+        viewClassCtrl.bookClass = function() {
+            ClassSvc.bookClass(classId, viewClassCtrl.user.id)
+                .then(function(results){
+                    viewClassCtrl.message ="Class successfully booked.";
+                }).catch(function(err){
+                    viewClassCtrl.message ="You have booked for this class.";                    
+                    console.error("Error encountered: ", err);
+                });
         };
-    };
+    }; // end of ViewClassCtrl
 
     // ===================================================================================
     // EditClassCtrl
@@ -822,7 +741,7 @@
     EditClassCtrl.$inject = [];
     function EditClassCtrl() {
         var editClassCtrl = this;
-    };
+    }; // end of EditClassCtrl
 
     // ===================================================================================
     // ClientRegCtrl
@@ -881,6 +800,6 @@
                 });
         };
 
-    };
+    }; // end of TrainerRegCtrl
 
 })();

@@ -658,7 +658,7 @@ app.get("/api/bookings", function (req, res) {
 // BOOK a class
 // Accepts class_id & client_id to perform booking
 app.post("/api/bookings", function (req, res) {
-    console.log("New booking details: ", req.body);
+    console.log("SERVER: New booking details: ", req.body);
 
     // version 2 - check for duplicate booking before inserting, prevent double-booking
     Transaction.findOrCreate({
