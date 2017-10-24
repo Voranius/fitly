@@ -66,10 +66,22 @@
 
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <label for="datetime">Date and Time of Class</label>
-                <div>
+                <label for="datetime">Date and Start Time</label>
+                <div class='input-group date' id='start_time'>
+                    <input type='text' class="form-control" angulardtp ng-model="addClassCtrl.class.start_time"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <!-- {{addClassCtrl.class.start_time}} -->
+                <!-- <div>
                     <input class="form-control" id='datetimepicker' name="datetime" type="text" required datetimez="datePickerOptions" ng-model="addClassCtrl.class.start_time"/>
-                </div>               
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker').datetimepicker();
+                    });
+                </script> -->
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="duration">Duration of Class (in minutes)</label>
@@ -109,7 +121,7 @@
                 <button type="button" class="btn btn-block btn-danger" ui-sref="traindash">Back to Dashboard</button>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <button type="button" class="btn btn-block btn-info" ng-show="addClassCtrl.message" ng-click="addClassCtrl.addAnother()">Add Another</button>
+                <button type="reset" class="btn btn-block btn-info" ng-show="addClassCtrl.message" ng-click="addClassCtrl.addAnother()">Add Another</button>
             </div>
         </form>
         <div class="clearfix"></div>
