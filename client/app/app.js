@@ -163,6 +163,11 @@
                 templateUrl: 'views/clientdash.html',
                 controller: 'ClientDashCtrl as clientDashCtrl'
             })
+            .state('bookings', {
+                url: '/bookings',
+                templateUrl: 'views/mybookings.html',
+                controller: 'ClientDashCtrl as clientDashCtrl'
+            })
             .state('adduser', {
                 url:'/adduser',
                 templateUrl: 'views/adduser.html',
