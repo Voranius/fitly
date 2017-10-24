@@ -83,6 +83,9 @@ var fitnessDb = new sequelize(
         timezone: '+08:00',      // correct UTC+8 timestamp when writing to database
         logging: console.log,
         dialect: 'mysql',
+        dialectOptions: {
+            useUTC: false       // for reading from database
+        },
         pool: {
             max: 5,
             min: 0,

@@ -2,6 +2,8 @@
     var app = angular.module('fitly', ['ui.router']);
 
     app.config(FitlyConfig);
+    
+    app.directive("angulardtp", angulardtp);
 
     app.service("UserSvc", UserSvc);
     app.service("ClassSvc", ClassSvc);
@@ -21,73 +23,120 @@
     app.controller("TrainerRegCtrl", TrainerRegCtrl);
 
     app.controller("ProfileCtrl", ProfileCtrl);
-    app.controller("DateTimeCtrl", DateTimeCtrl);
+    // app.controller("DateTimeCtrl", DateTimeCtrl);
 
     // ===================================================================================
     // DateTimePicker directive to initiate ngModel
     // ===================================================================================
 
-    app.directive('datetimez', function(){
-        return {
-            require: '?ngModel',
-            restrict: 'A',
-            link: function(scope, element, attrs, ngModel){
-                if(!ngModel) return;  
+    // app.directive('datetimez', function(){
+    //     return {
+    //         require: '?ngModel',
+    //         restrict: 'A',
+    //         link: function(scope, element, attrs, ngModel){
+    //             if(!ngModel) return;  
               
-                ngModel.$render = function(){
-                    element.val( ngModel.$viewValue || '' );
-                };
+    //             ngModel.$render = function(){
+    //                 element.val( ngModel.$viewValue || '' );
+    //             };
               
-                function read() {
-                    var value = element.val();
-                    ngModel.$setViewValue(value);
-                    //console.log(scope.dueDate);
-                }
+    //             function read() {
+    //                 var value = element.val();
+    //                 ngModel.$setViewValue(value);
+    //                 //console.log(scope.dueDate);
+    //             }
                 
-                var options = scope.$eval(attrs.datetimez) || {};
-                if(element.next().is('.input-group-addon')) {
-                  var parentElm = $(element).parent();
-                  parentElm.datetimepicker(options);
+    //             var options = scope.$eval(attrs.datetimez) || {};
+    //             if(element.next().is('.input-group-addon')) {
+    //               var parentElm = $(element).parent();
+    //               parentElm.datetimepicker(options);
               
-                  parentElm.on('dp.change', function(){
-                     scope.$apply(read);
-                  });
-                } else {
-                  element.datetimepicker(options);
+    //               parentElm.on('dp.change', function(){
+    //                  scope.$apply(read);
+    //               });
+    //             } else {
+    //               element.datetimepicker(options);
               
-                  element.on('dp.change', function(){
-                     scope.$apply(read);
-                  });
-                }
+    //               element.on('dp.change', function(){
+    //                  scope.$apply(read);
+    //               });
+    //             }
               
-                read();
-            }
-        };
-    });
+    //             read();
+    //         }
+    //     };
+    // });
     
     // ===================================================================================
     // DateTimePicker controller
     // ===================================================================================
 
-    DateTimeCtrl.$inject = ['$scope'];
-    function DateTimeCtrl($scope) {
+    // DateTimeCtrl.$inject = ['$scope'];
+    // function DateTimeCtrl($scope) {
 
-        $scope.datePickerOptions = { 
-            format : 'YYYY-MM-DD HH:mm:ss',
-            timeZone: 'Asia/Singapore'
-        };
+    //     $scope.datePickerOptions = { 
+    //         format : 'YYYY-MM-DD HH:mm:ss',
+    //         timeZone: 'Asia/Singapore'
+    //     };
          
-        $scope.$watch('addClassCtrl.class.start_time',
-            function() {
-                console.log($scope.addClassCtrl.class.start_time);
-            });
+    //     $scope.$watch('addClassCtrl.class.start_time',
+    //         function() {
+    //             console.log($scope.addClassCtrl.class.start_time);
+    //         });
 
-        $scope.$watch('viewClassCtrl.class.start_time',
-            function() {
-                console.log($scope.viewClassCtrl.class.start_time);
-            });
+    //     $scope.$watch('viewClassCtrl.class.start_time',
+    //         function() {
+    //             console.log($scope.viewClassCtrl.class.start_time);
+    //         });
+    // };
+
+    function angulardtp() {
+        return {
+            restrict: "A",
+            require: "ngModel",
+            link: function (scope, element, attrs, ngModelCtrl) {
+                var parent = $(element).parent();
+                // locate the parent of the current element, and enable DateTimePicker
+                // hh:mm enables AM/PM on the UI
+                var dtp = parent.datetimepicker({
+                    format: "YYYY-MM-DD hh:mm A",
+                    showTodayButton: false
+                });
+                // then, if anything changes, set the ng-model value
+                // HH:mm enables 24-hour clock, format corresponds to database DATETIME type
+                dtp.on("dp.change", function (e) {
+                    ngModelCtrl.$setViewValue(moment(e.date).format("YYYY-MM-DD HH:mm"));
+                    scope.$apply();
+                });
+            }
+
+            // restrict: "A",
+            // require: "ngModel",
+            // link: function (scope, elem, attrs, ngModelCtrl) {
+            //     var updateModel = function () {
+            //         scope.$apply(function () {
+            //             ngModelCtrl.$modelValue = elem.val();
+            //         });
+            //     };
+            //     elem.datetimepicker({
+            //         useCurrent: false,
+            //         minuteStepping:5,
+            //         icons: {
+            //             time: 'fa fa-clock-o',
+            //             date: 'fa fa-calendar',
+            //             up:   'fa fa-arrow-up',
+            //             down: 'fa fa-arrow-down'
+            //         }
+            //     });
+
+            //     elem.on("change",function (e) {
+            //         updateModel();
+            //     });
+            // }
+
+        }; // end of return
     };
-    
+
     // ===================================================================================
     // FitlyConfig to set up various states of the system
     // ===================================================================================
@@ -152,9 +201,6 @@
 
             $urlRouterProvider.otherwise('/login');
     };
-
-    
-
 
     // ===================================================================================
     // UserSvc to provide central user-database-related services
@@ -530,6 +576,8 @@
                     // count the number of clients who have booked each class
                     for (var c in trainerDashCtrl.classes) {
                         trainerDashCtrl.classes[c].bookingCount = trainerDashCtrl.classes[c].transactions.length;
+                        trainerDashCtrl.classes[c].start_time = moment(trainerDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
+                        
                     }
                     
                 }).catch(function(err){
@@ -551,6 +599,11 @@
         // assign same functionality to controller
         trainerDashCtrl.getMyClasses = getMyClasses;
 
+        trainerDashCtrl.resetSearch = function() {
+            trainerDashCtrl.keyword = "";
+            getMyClasses();
+        };
+
         trainerDashCtrl.addClass = function(trainerId) {
             $state.go("addclass");
         };
@@ -566,12 +619,14 @@
 
     };
 
-    AddClassCtrl.$inject = ['$state', 'ClassSvc', 'UserSvc'];
-    function AddClassCtrl($state, ClassSvc, UserSvc) {
+    AddClassCtrl.$inject = ['$state', '$scope', 'ClassSvc', 'UserSvc'];
+    function AddClassCtrl($state, $scope, ClassSvc, UserSvc) {
         var addClassCtrl = this;
 
         addClassCtrl.user = {};
         addClassCtrl.class = {};
+        // initialise and format start_time to present date & time
+        addClassCtrl.class.start_time = moment().utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
 
         // check that user is logged in, get basic user details 
         UserSvc.getUserStatus()
@@ -602,6 +657,7 @@
 
         addClassCtrl.addAnother = function() {
             addClassCtrl.class = {};
+            addClassCtrl.class.start_time = moment().utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
         };
     };
 
@@ -626,6 +682,7 @@
         ClassSvc.retrieveClassById(classId)
             .then(function(myClass) {
                 viewClassCtrl.class =  myClass.data;
+                viewClassCtrl.class.start_time = moment(viewClassCtrl.class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
@@ -700,13 +757,15 @@
         
         trainerRegCtrl.user = {};
         trainerRegCtrl.message = ""; 
-        trainerRegCtrl.user.role = 1;       // setting "Trainer" role
-        trainerRegCtrl.user.status = 1;     // setting status to "Active"
+        trainerRegCtrl.user.role = 0;
+        trainerRegCtrl.user.status = 0;
 
         trainerRegCtrl.register = function () {
+            trainerRegCtrl.user.role = 1;           // setting "Trainer" role
+            trainerRegCtrl.user.status = 1;         // setting status to "Active"
             UserSvc.insertUser(trainerRegCtrl.user)
                 .then(function(user){
-                    trainerRegCtrl.message = "You have been successfully registered.";
+                    trainerRegCtrl.message = "You have been successfully registered. Please log in.";
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
                     
