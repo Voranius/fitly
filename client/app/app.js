@@ -10,6 +10,7 @@
     
     app.controller("LoginCtrl", LoginCtrl);
     app.controller("LogoutCtrl", LogoutCtrl);
+    app.controller("HomeCtrl", HomeCtrl);
 
     app.controller("ListUsersCtrl", ListUsersCtrl);
     app.controller("TrainerDashCtrl", TrainerDashCtrl);
@@ -34,6 +35,11 @@
                 templateUrl: 'views/login.html',
                 controller: 'LoginCtrl as loginCtrl'
             })
+            .state('home', {
+                url: '/home',
+                // templateUrl: 'views/home.html',
+                controller: 'HomeCtrl as homeCtrl'
+            })            
             .state('list', {
                 url: '/list',
                 templateUrl: 'views/list.html',
@@ -270,6 +276,17 @@
             });
         };
 
+        classSvc.retrieveMyClasses = function(clientId, keyword) {
+            return $http({
+                method: 'GET',
+                url: '/api/bookings',
+                params: {
+                    'clientId': clientId,
+                    'keyword': keyword
+                }
+            });
+        };
+
         classSvc.updateClass = function(classToUpdate) {
             console.log("Class details to update: ", classToUpdate);
             return $http({
@@ -356,6 +373,21 @@
                 });
         };
     }; // End of LogoutCtrl
+    
+    HomeCtrl.$inject = ['$state','UserSvc'];
+    function HomeCtrl($state, UserSvc) {
+        UserSvc.getUserStatus()
+            .then(function(user) {
+                if(user.data.user.role == '2')
+                    $state.go('clientdash');
+                else if (user.data.user.role == '1')
+                    $state.go('traindash');
+                else if (user.data.user.role == '0')
+                    $state.go('list');
+            }).catch(function(err) {
+                console.error("Error: ", err);
+            });
+    };
 
     // ===================================================================================
     // ListUsersCtrl to handle the central display of users
@@ -585,25 +617,44 @@
     ClientDashCtrl.$inject = ['$state', 'UserSvc', 'ClassSvc'];
     function ClientDashCtrl($state, UserSvc, ClassSvc) {
         var clientDashCtrl = this;
+        var currentUserState = $state.current.name;
 
         clientDashCtrl.user = "";
         clientDashCtrl.keyword = "";
         clientDashCtrl.classes = {};
 
+        
         var getAllClasses = function() {
-            ClassSvc.retrieveAllClasses(clientDashCtrl.keyword)
-                .then(function(classes){
-                    clientDashCtrl.classes = classes.data;
+            if (currentUserState == 'clientdash') {
+                ClassSvc.retrieveAllClasses(clientDashCtrl.keyword)
+                    .then(function(classes){
+                        clientDashCtrl.classes = classes.data;
+                        // format SQL DATETIME to correct format on HTML
+                        for (var c in clientDashCtrl.classes) {
+                            clientDashCtrl.classes[c].start_time = moment(clientDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                            clientDashCtrl.classes[c].createdAt = moment(clientDashCtrl.classes[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                            clientDashCtrl.classes[c].updatedAt = moment(clientDashCtrl.classes[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        };
+                    }).catch(function(err){
+                        console.error("Error encountered: ", err);
+                    });
+            } else if (currentUserState == 'bookings') {
+                ClassSvc.retrieveMyClasses(clientDashCtrl.user.id, clientDashCtrl.keyword)
+                    .then(function(classes){
+                        clientDashCtrl.classes = classes.data;
+                        // format SQL DATETIME to correct format on HTML
+                        for (var c in clientDashCtrl.classes) {
+                            clientDashCtrl.classes.class[c].start_time = moment(clientDashCtrl.classes.class[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                            clientDashCtrl.classes.class[c].createdAt = moment(clientDashCtrl.classes.class[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                            clientDashCtrl.classes.class[c].updatedAt = moment(clientDashCtrl.classes.class[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        };
+                        
+                    }).catch(function(err){
+                        console.error("Error encountered: ", err);
+                    });
+            };
 
-                    // format SQL DATETIME to correct format on HTML
-                    for (var c in clientDashCtrl.classes) {
-                        clientDashCtrl.classes[c].start_time = moment(clientDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
-                        clientDashCtrl.classes[c].createdAt = moment(clientDashCtrl.classes[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
-                        clientDashCtrl.classes[c].updatedAt = moment(clientDashCtrl.classes[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
-                    }
-                }).catch(function(err){
-                    console.error("Error encountered: ", err);
-                });
+
         };
 
         // check that user is logged in, get basic user details 
@@ -659,7 +710,7 @@
             getAllClasses();
         };
 
-    };
+    }; // end of ClientDashCtrl
 
     // ===================================================================================
     // AddClassCtrl
