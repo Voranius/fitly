@@ -188,9 +188,11 @@ app.use(bodyParser.json({limit: '10mb'}));
 // can use SHA256 to even create and use a hash within a secret
 // http://www.xorbin.com/tools/sha256-hash-calculator
 app.use(session({
-    secret:"c5e3847e3f1f3712e035fa1d381061389bc04eebf7536f6bd89b32e9aafdc5f1",
-    resave: false,
-    saveUninitialized: true
+    secret:"c5e3847e3f1f3712e035fa1d381061389bc04eebf7536f6bd89b32e9aafdc5f1"
+    // commented out to remove known issue of multiple deserializer
+    // Reported on https://github.com/jaredhanson/passport/issues/14
+    // resave: false,
+    // saveUninitialized: true
 }));
 app.use(passport.initialize()); // set up passport interceptions at express level
 app.use(passport.session());    // passport now integrates with newly-declared session
@@ -433,7 +435,7 @@ app.get("/api/classes", function (req, res) {
     var sortOrder = req.query.sortOrder || "ASC";
 
     Class.findAll({
-        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category'],
+        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category', 'status', 'createdAt', 'updatedAt'],
         where: {$or: [
             {name: {$like: '%' + keyword + '%'}},
             {details: {$like: '%' + keyword + '%'}},
@@ -495,7 +497,7 @@ app.get("/api/bookings/:trainerId", function (req, res) {
     var sortOrder = req.query.sortOrder || "ASC";
 
     Class.findAll({
-        attributes: ['id', 'name', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category','status','createdAt', 'updatedAt'],
+        attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category','status','createdAt', 'updatedAt'],
         where: {$and: [
             { creator_id: trainerId},
             // searches keyword in class name, details, neighbourhood, category
@@ -550,7 +552,7 @@ app.put("/api/classes/:classId", function (req, res) {
             category: req.body.class.category,
             // creator_id: parseInt(req.body.class.creator_id), // creator_id cannot change
             // backup_id: parseInt(req.body.class.backup_id),   // backup trainer not implemented
-            status: parseInt(req.body.class.status) || 1        // need to validate: 1, 0 or 2
+            status: req.body.class.status                       // need to validate: 1, 0 or 2
         },{
             where: {id: classId}
         })
@@ -606,7 +608,7 @@ app.post("/api/classes", function (req, res) {
         category: req.body.class.category,
         creator_id: parseInt(req.body.class.creator_id),
         // backup_id: parseInt(req.body.class.backup_id),   // backup trainer not implemented
-        status: parseInt(req.body.class.status) || 1   
+        status: req.body.class.status   
     }).then(function(result) {
         res.status(200);
         res.type("application/json");

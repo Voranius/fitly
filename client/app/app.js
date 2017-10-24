@@ -540,8 +540,9 @@
                     // count the number of clients who have booked each class
                     for (var c in trainerDashCtrl.classes) {
                         trainerDashCtrl.classes[c].bookingCount = trainerDashCtrl.classes[c].transactions.length;
-                        trainerDashCtrl.classes[c].start_time = moment(trainerDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
-                        
+                        trainerDashCtrl.classes[c].start_time = moment(trainerDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        trainerDashCtrl.classes[c].createdAt = moment(trainerDashCtrl.classes[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        trainerDashCtrl.classes[c].updatedAt = moment(trainerDashCtrl.classes[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                     }
                     
                 }).catch(function(err){
@@ -593,7 +594,13 @@
             ClassSvc.retrieveAllClasses(clientDashCtrl.keyword)
                 .then(function(classes){
                     clientDashCtrl.classes = classes.data;
-                    
+
+                    // format SQL DATETIME to correct format on HTML
+                    for (var c in clientDashCtrl.classes) {
+                        clientDashCtrl.classes[c].start_time = moment(clientDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        clientDashCtrl.classes[c].createdAt = moment(clientDashCtrl.classes[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                        clientDashCtrl.classes[c].updatedAt = moment(clientDashCtrl.classes[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                    }
                 }).catch(function(err){
                     console.error("Error encountered: ", err);
                 });
@@ -793,10 +800,12 @@
 
         clientRegCtrl.user = {};
         clientRegCtrl.message = ""; 
-        clientRegCtrl.user.role = 2;       // setting "Client" role
-        clientRegCtrl.user.status = 1;     // setting status to "Active"
+        clientRegCtrl.user.role = 2;
+        clientRegCtrl.user.status = "";
 
         clientRegCtrl.register = function () {
+            clientRegCtrl.user.role = 2;            // setting "Client" role
+            clientRegCtrl.user.status = "Active";   // setting status to "Active"
             UserSvc.insertUser(clientRegCtrl.user)
                 .then(function(user){
                     clientRegCtrl.message = "You have been successfully registered.";
@@ -822,11 +831,11 @@
         trainerRegCtrl.user = {};
         trainerRegCtrl.message = ""; 
         trainerRegCtrl.user.role = 0;
-        trainerRegCtrl.user.status = 0;
+        trainerRegCtrl.user.status = "";
 
         trainerRegCtrl.register = function () {
-            trainerRegCtrl.user.role = 1;           // setting "Trainer" role
-            trainerRegCtrl.user.status = 1;         // setting status to "Active"
+            trainerRegCtrl.user.role = 1;               // setting "Trainer" role
+            trainerRegCtrl.user.status = "Active";      // setting status to "Active"
             UserSvc.insertUser(trainerRegCtrl.user)
                 .then(function(user){
                     trainerRegCtrl.message = "You have been successfully registered. Please log in.";

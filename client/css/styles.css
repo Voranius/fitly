@@ -420,6 +420,7 @@ hr.style14 {
 ----------------------------------------------------- */
 
 .btn-filter {
+    width: 80px;
     margin-right: -15px;
     margin-left: 25px;
     margin-top: 10px;

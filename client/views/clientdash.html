@@ -1,42 +1,39 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
-
       <div class="navbar-header nav navbar-nav navbar-left">
               <h3>Welcome, {{clientDashCtrl.user.firstname}}</h3>
       </div>
-
   </div>
 </nav>
 
 <div>
-<h4 class="sah4">User Panel</h4>
+    <h4 class="sah4">Let's Get Fitly!</h4>
 </div>
 
 <div class="container-fluid"></div>
-      <!-- Search Form -->
-      <form role="form" class="usrsrch" ng-click="clientDashCtrl.getAllClasses()">
+    <!-- Search Form -->
+    <form role="form" class="usrsrch" ng-submit="clientDashCtrl.getAllClasses()">
       
-      <!-- Search Field -->
-          <div class="row">
-              <div class="form-group">
-                    <div class="input-group col-md-12">
-                        <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "clientDashCtrl.keyword" placeholder="Search for a class" />
-                        <span class="input-group-btn">
-                                <button class="btn btn-success usrsrchbtn" type="submit">
-                                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                    </button>
-                                    <button class="btn btn-danger usrsrchbtn" type="button" ng-click="clientDashCtrl.resetSearch()">
-                                        <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
-                                    </button>
-                        </span>
-                    </div>
-              </div>
-          </div>
-          
-      </form>
-      <!-- End of Search Form -->
+        <!-- Search Field -->
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group col-md-12">
+                    <input class="form-control usrscrhfrm" id="searchString" type="text" name="searchString" ng-model = "clientDashCtrl.keyword" placeholder="Search for a workout" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-success usrsrchbtn" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                        <button class="btn btn-danger usrsrchbtn" type="button" ng-click="clientDashCtrl.resetSearch()">
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- End of Search Form -->
 
-
+    <!-- Display buttons to filter by activity categories -->
     <div class="container-fluid">
         <button class="btn btn-default btn-xs pull-right btn-filter" type="submit" ng-click="clientDashCtrl.core()">Core</button>
         <button class="btn btn-info btn-xs pull-right btn-filter" type="submit" ng-click="clientDashCtrl.weights()">Weights</button>
@@ -46,47 +43,57 @@
         <button class="btn btn-danger btn-xs pull-right btn-filter" type="submit" ng-click="clientDashCtrl.crossfit()">Crossfit</button>
     </div>
 
-      <div class="row" ng-repeat="class in clientDashCtrl.classes">
+    <!-- Display list of trainer classes -->
+    <div class="row" ng-repeat="class in clientDashCtrl.classes">
         
-            <div class="panel panel-primary trainer-panel">
-              <div class="panel-heading">
-                  <div class="row">
-                      <div class="col-lg-6">
-                          <b>{{class.name}}</b>
-                      </div>
-                      <div class="col-lg-6">
-                          <button type="button" class="btn btn-default btn-xs pull-right" ng-click="clientDashCtrl.viewClass(class.id)"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
-                      </div>
-                  </div>
-              </div>
-              <div class="panel-body">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <b>Category:</b> {{class.category}}
-                      </div>
-                      <div class="col-lg-4">
+        <div class="panel panel-primary trainer-panel">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <b>{{class.name}}</b>
+                    </div>
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-default btn-xs pull-right" ng-click="clientDashCtrl.viewClass(class.id)"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Details:</b> {{class.details}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Category:</b> {{class.category}}
+                    </div>
+                    <div class="col-lg-4">
                         <b>Class Size (Min/Max):</b> {{class.minsize}}/{{class.maxsize}}
-                      </div>
-                      <div class="col-lg-4">
-                          <b>Status:</b> {{class.status}}
-                      </div>
-                  </div>
-              </div>
-              <div class="panel-footer">
-                  <div class="row">
-                      <div class="col-lg-4">
-                          <b>Created:</b> {{class.createdAt}}
-                      </div>
-                      <div class="col-lg-4">
-                          <b>Updated:</b> {{class.updatedAt}}
-                      </div>
-                      <div class="col-lg-4">
-                          <b>District:</b> {{class.neighbourhood}}
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-
-
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Date/Time:</b> {{class.start_time}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Duration (minutes):</b> {{class.duration}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>District:</b> {{class.neighbourhood}}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Status:</b> {{class.status}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Created:</b> {{class.createdAt}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Updated:</b> {{class.updatedAt}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
