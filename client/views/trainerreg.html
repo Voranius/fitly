@@ -2,6 +2,7 @@
     <div class="col-sm-2 col-lg-4"></div>
     <div class="col-sm-8 col-lg-4">
         <h1 class="brand-light">Trainer Registration</h1>
+        <hr class="style13">
         <form name="clientForm" ng-submit="trainerRegCtrl.register()">
             <div class="form-group">
                 <div class="input-group">
@@ -49,8 +50,8 @@
             </div>
 
             <div class="row">
-                <button type="button" class="btn btn-success sign-in pull-left" ui-sref="login">Log In</button>
-                <button type="submit" class="btn btn-primary sign-in pull-right">Register</button>
+                <button type="button" class="btn btn-success sign-in pull-left ctreglogbtn" ui-sref="login">Log In</button>
+                <button type="submit" class="btn btn-primary sign-in pull-right ctregregbtn">Register</button>
             </div>
         </form>
         <div ng-show="trainerRegCtrl.message">{{ trainerRegCtrl.message }}</div>
