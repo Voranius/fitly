@@ -62,9 +62,9 @@ module.exports = function(database, Sequelize) {
                 allowNull: true          
             },
             status: {
-                type: Sequelize.INTEGER(1),
+                type: Sequelize.STRING(20),
                 allowNull: true,
-                defaultValue: 1             // 0: inactive, 1: active, 2: unavailable
+                defaultValue: 'Active'      // Values: 'Active', 'Inactive', 'Unavailable'
             },
             createdAt: {
                 type: Sequelize.DATE,

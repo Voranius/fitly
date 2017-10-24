@@ -96,7 +96,7 @@ module.exports = function(database, Sequelize) {
                 }
             },
             status: {
-                type: Sequelize.INTEGER(1),
+                type: Sequelize.STRING(20),
                 allowNull: true
             },
             createdAt: {
