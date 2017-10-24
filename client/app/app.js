@@ -698,8 +698,43 @@
         // assign same functionality to controller
         clientDashCtrl.getAllClasses = getAllClasses;
 
+        clientDashCtrl.resetSearch = function() {
+            clientDashCtrl.keyword = "";
+            getAllClasses();
+        };
+
         clientDashCtrl.viewClass = function(classId) {
             $state.go("viewclass", {'classId' : classId});
+        };
+
+        clientDashCtrl.core = function() {
+            clientDashCtrl.keyword = "core";
+            getAllClasses();
+        };
+
+        clientDashCtrl.aerobics = function() {
+            clientDashCtrl.keyword = "aerobics";
+            getAllClasses();
+        };
+
+        clientDashCtrl.weights = function() {
+            clientDashCtrl.keyword = "weights";
+            getAllClasses();
+        };
+
+        clientDashCtrl.MMA = function() {
+            clientDashCtrl.keyword = "MMA";
+            getAllClasses();
+        };
+
+        clientDashCtrl.crossfit = function() {
+            clientDashCtrl.keyword = "crossfit";
+            getAllClasses();
+        };
+
+        clientDashCtrl.boxing = function() {
+            clientDashCtrl.keyword = "boxing";
+            getAllClasses();
         };
 
     };
