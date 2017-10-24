@@ -389,6 +389,29 @@ hr.style14 {
     margin-right: 12px;
 }
 
+.panel-heading {
+    background-color: #131112 !important;
+    background-image: none !important;
+}
+
+.panel-body {
+    background-color: #F7F7FF !important;
+}
+
+.panel-footer {
+    background-color: #E5ECE9 !important;
+}
+
+/* ---------------------------------------------------
+    CLIENT PANEL
+----------------------------------------------------- */
+
+.btn-filter {
+    margin-right: -15px;
+    margin-left: 25px;
+    margin-top: 10px;
+}
+
 /* ---------------------------------------------------
     ADD CLASS - REMOVE POSTAL CODE SPINNER
 ----------------------------------------------------- */
