@@ -22,19 +22,19 @@
 
             <ul class="list-unstyled components">
                 <li class="active">
-                    <a href="#">
+                    <a ui-sref='home'>
                         <i class="glyphicon glyphicon-home"></i>
                         Home
                     </a>
                 </li>
                 <li>
-                    <a ng-href='#!/bookings'>
+                    <a ui-sref='bookings'>
                         <i class="glyphicon glyphicon-book"></i>
                         My Bookings
                     </a>
                 </li>
                 <li>
-                    <a ng-href='#!/profile/{{user.id}}' ng-click="profileCtrl.retrieveUser(user.id)">
+                    <a ui-sref='profile'>
                         <i class="glyphicon glyphicon-user"></i>
                         My Profile
                     </a>

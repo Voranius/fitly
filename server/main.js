@@ -625,6 +625,7 @@ app.post("/api/classes", function (req, res) {
 app.get("/api/bookings", function (req, res) {
     // manipulate variables by setting defaults as well
     var clientId = req.query.clientId || "";
+    var keyword = req.query.keyword || "";
     var sortBy = req.query.sortBy || 'start_time';
     var sortOrder = req.query.sortOrder || 'ASC';
 
@@ -635,7 +636,13 @@ app.get("/api/bookings", function (req, res) {
         // Include Class details
         include: [{
             model: Class,
-            attributes: ['id', 'name', 'start_time', 'category', 'creator_id'],
+            attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'category', 'minsize', 'maxsize', 'status', 'creator_id', 'createdAt', 'updatedAt'],
+            where: {$or: [
+                {name: {$like: '%' + keyword + '%'}},
+                {details: {$like: '%' + keyword + '%'}},
+                {neighbourhood: {$like: '%' + keyword + '%'}},
+                {category: {$like: '%' + keyword + '%'}}
+            ]},
             include: [{
                 model: Person,
                 attributes: ['firstname', 'lastname']                
