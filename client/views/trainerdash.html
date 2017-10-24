@@ -14,7 +14,7 @@
 
 <div class="container-fluid"></div>
     <!-- Search Form -->
-    <form role="form" class="usrsrch" ng-click="trainerDashCtrl.getMyClasses()">
+    <form role="form" class="usrsrch" ng-submit="trainerDashCtrl.getMyClasses()">
     
         <!-- Search Field -->
         <div class="row">
@@ -36,6 +36,7 @@
     </form>
     <!-- End of Search Form -->
 
+    <!-- Display list of trainer classes -->
     <div class="row">
         <button type="button" class="btn btn-primary btn-xs addnew2 pull-left" ng-click="trainerDashCtrl.addClass(trainerDashCtrl.user.id)"><span class="glyphicon glyphicon-plus-sign"></span> Add a New Class</button>
     </div>
