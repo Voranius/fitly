@@ -281,7 +281,7 @@ app.post("/api/users", function (req, res) {
             firstname: req.body.user.firstname,
             lastname: req.body.user.lastname,
             role: req.body.user.role,           // To validate. 0: Admin, 1: Trainer, 2: Client
-            status: req.body.user.status        // To validate. 1: Active, 0: Inactive, 2: Unavailable
+            status: req.body.user.status        // Active, Inactive, Unavailable
         }})
             .spread(function(user, created) {
                 // if user is successfully created
@@ -390,7 +390,7 @@ app.put("/api/users/:userId", function (req, res) {
             id_num: req.body.user.id_num,
             id_type: req.body.user.id_type,
             // role: parseInt(req.body.user.role)       // cannot change role in this version
-            status: parseInt(req.body.user.status) || 1 // need to validate: 1, 0 or 2
+            status: req.body.user.status                // need to validate: 1, 0 or 2
         },{
             where: {id: userId}
         })
@@ -552,7 +552,7 @@ app.put("/api/classes/:classId", function (req, res) {
             category: req.body.class.category,
             // creator_id: parseInt(req.body.class.creator_id), // creator_id cannot change
             // backup_id: parseInt(req.body.class.backup_id),   // backup trainer not implemented
-            status: req.body.class.status                       // need to validate: 1, 0 or 2
+            status: req.body.class.status                       // Active, Inactive, Unavailable
         },{
             where: {id: classId}
         })
@@ -608,7 +608,7 @@ app.post("/api/classes", function (req, res) {
         category: req.body.class.category,
         creator_id: parseInt(req.body.class.creator_id),
         // backup_id: parseInt(req.body.class.backup_id),   // backup trainer not implemented
-        status: req.body.class.status   
+        status: req.body.class.status                       // Active, Inactive, Unavailable
     }).then(function(result) {
         res.status(200);
         res.type("application/json");

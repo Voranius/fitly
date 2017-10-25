@@ -37,7 +37,7 @@
             })
             .state('home', {
                 url: '/home',
-                // templateUrl: 'views/home.html',
+                templateUrl: 'views/home.html',
                 controller: 'HomeCtrl as homeCtrl'
             })            
             .state('list', {
@@ -91,7 +91,7 @@
                 controller: 'TrainerRegCtrl as trainerRegCtrl'
             })
             .state('profile', {
-                url:'/profile/:userId',
+                url:'/profile',
                 templateUrl: 'views/profile.html',
                 controller: 'ProfileCtrl as profileCtrl'
             });
@@ -384,6 +384,8 @@
                     $state.go('traindash');
                 else if (user.data.user.role == '0')
                     $state.go('list');
+                else
+                    $state.go('login');
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
@@ -461,31 +463,36 @@
     // ===================================================================================
     // ProfileCtrl to handle viewing of a user
     // ===================================================================================
-    ProfileCtrl.$inject = ['$state', '$stateParams', 'UserSvc'];
-    function ProfileCtrl($state, $stateParams, UserSvc) {
+    ProfileCtrl.$inject = ['$state', 'UserSvc'];
+    function ProfileCtrl($state, UserSvc) {
         var profileCtrl = this;
 
         profileCtrl.user = {};
         profileCtrl.message = "";
 
-        // check that user is logged in, get basic user details 
-        UserSvc.getUserStatus()
+        // call by passing id of user to view
+        var retrieveUser = function() {
+
+            // check that user is logged in, get basic user details 
+            UserSvc.getUserStatus()
             .then(function(user) {
                 profileCtrl.user = user.data.user;
-            }).catch(function(err) {
-                console.error("Error: ", err);
-            });
-
-        // call by passing id of user to view
-        profileCtrl.retrieveUser = function() {
-        UserSvc.retrieveUserById($stateParams.userId)
-            .then(function(user) {
-                profileCtrl.user = user.data;
-                $state.go("profile");
+                UserSvc.retrieveUserById(profileCtrl.user.id)
+                    .then(function(user) {
+                        profileCtrl.user = user.data;
+                    }).catch(function(err) {
+                        console.error("Error: ", err);
+                    });
             }).catch(function(err) {
                 console.error("Error: ", err);
             });
         };
+        // retrieve the user's profile details
+        retrieveUser();
+        
+        // reusable controller call
+        profileCtrl.retrieveUser = retrieveUser;
+
         profileCtrl.saveUser = function() {
             UserSvc.updateUser(profileCtrl.user)
                 .then(function(items){
@@ -497,30 +504,12 @@
         };
 
         profileCtrl.cancel = function() {
-            UserSvc.getUserStatus(profileCtrl.user)
-            .then(function(user) {
-                if (result.status == 200) {
-                    if (result.data.user.role == '2')
-                        $state.go('clientdash');
-                    else if (result.data.user.role == '1')
-                        $state.go('traindash');
-                    else if (result.data.user.role == '0')
-                        $state.go('list');
-                };
-            }).catch(function(err) {
-                console.log("Values in err: ", err);
-                // when user does not exist in the system
-                if (err.status == 401) {
-                    profileCtrl.message = "Invalid email or password."                   
-                } else if (err.status == 500) {
-                    profileCtrl.message = "Could not log in user at this time."                                           
-                } else {
-                    // it is some other server-returned error
-                    profileCtrl.message = "Unexpected server error"                                           
-                    console.log("Error: ", err);
-                }
-                $state.go('login');
-            });
+            if (profileCtrl.user.role == '2')
+                $state.go('clientdash');
+            else if (profileCtrl.user.role == '1')
+                $state.go('traindash');
+            else if (profileCtrl.user.role == '0')
+                $state.go('list');
         };
 
         profileCtrl.deleteUser = function() {
