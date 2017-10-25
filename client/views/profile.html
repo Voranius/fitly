@@ -2,14 +2,14 @@
     <div class="container-fluid">
 
         <div class="navbar-header nav navbar-nav navbar-left">
-            <h3>Welcome, {{profileCtrl.user.firstname}}</h3>
+            <h3>Welcome, {{profileCtrl.user.firstname}} {{profileCtrl.user.lastname}}</h3>
         </div>
 
     </div>
 </nav>
 
 <div class="container-fluid profile">
-    <h3 class="profile-header">User Profile</h3>
+    <h3 class="profile-header">Your Profile</h3>
     <hr>
     <div class="row">
         <!-- left column -->
@@ -62,20 +62,13 @@
                     <label class="col-md-3 control-label">Status:</label>
                     <div class="col-md-8">
                         <select class="form-control" id="status" required ng-model="profileCtrl.user.status">
-                            <option id="header" ng-value="null">Choose One</option>
-                            <option ng-value="Active">Active</option>
-                            <option ng-value="Inactive">Inactive</option>
-                            <option ng-value="Unavailable">Unavailable</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Unavailable</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- <div class="form-group">
-                    <label class="col-md-3 control-label">Qualifications:</label>
-                    <div class="col-md-8">
-                        <input class="form-control" type="text"  ng-model="profileCtrl.user.qualifications">
-                    </div>
-                </div> -->
                 <div class="form-group">
                     <label class="col-md-3 control-label"></label>
                     <div class="col-md-8">
