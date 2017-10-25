@@ -425,7 +425,7 @@ app.delete("/api/users/:userId", function (req, res) {
 });
 
 // =============== CLASS-RELATED API CALLS ===============
-// RETRIEVE a list of classes
+// RETRIEVE a list of classes (WITH STATUS = ACTIVE)
 // Returns preliminary/basic class details
 // Class data: id, name, details, start_time, duration, neighbourhood, category
 app.get("/api/classes", function (req, res) {
@@ -436,11 +436,15 @@ app.get("/api/classes", function (req, res) {
 
     Class.findAll({
         attributes: ['id', 'name', 'details', 'start_time', 'duration', 'neighbourhood', 'minsize', 'maxsize', 'category', 'status', 'createdAt', 'updatedAt'],
-        where: {$or: [
-            {name: {$like: '%' + keyword + '%'}},
-            {details: {$like: '%' + keyword + '%'}},
-            {neighbourhood: {$like: '%' + keyword + '%'}},
-            {category: {$like: '%' + keyword + '%'}}
+        where: {$and: [
+            { status: "Active"},
+            // searches keyword in class name, details, neighbourhood, category
+            {$or: [
+                {name: {$like: '%' + keyword + '%'}},
+                {details: {$like: '%' + keyword + '%'}},
+                {neighbourhood: {$like: '%' + keyword + '%'}},
+                {category: {$like: '%' + keyword + '%'}}
+            ]}
         ]},
         order: [[sortBy, sortOrder]],
         limit: 20
@@ -712,12 +716,12 @@ app.post("/api/bookings", function (req, res) {
 // CANCEL one booking
 // Accepts class_id & client_id to cancel booking
 app.delete("/api/bookings", function (req, res) {
-
+    console.log("value of class_id & client_id: ", req.params.classId, req.params.clientId);
     Transaction.destroy({
         // soft delete; check deleteAt column for timestamp
         where: {$and: [
-            {class_id: req.body.class_id},
-            {client_id: req.body.client_id}
+            {class_id: req.params.classId},
+            {client_id: req.params.clientId}
         ]}
     })
         .then(function(result){

@@ -288,7 +288,6 @@
         };
 
         classSvc.updateClass = function(classToUpdate) {
-            console.log("Class details to update: ", classToUpdate);
             return $http({
                 method: 'PUT',
                 url: '/api/classes/' + classToUpdate.id,
@@ -303,7 +302,6 @@
         };
 
         classSvc.bookClass = function(classId, clientId){
-            console.log("New class booking details: ", classId, clientId);
             return $http({
                 method: 'POST',
                 url: '/api/bookings',
@@ -313,6 +311,19 @@
                 }
             });
         };
+
+        classSvc.deleteBooking = function(classId, clientId) {
+            console.log("Values of classId, clientId: ", classId, clientId);
+            return $http({
+                method: 'DELETE',
+                url: '/api/bookings',
+                params: {
+                    'classId': classId,
+                    'clientId': clientId
+                }
+            });
+        };
+
     }; // End of ClassSvc
 
     // ===================================================================================
@@ -611,7 +622,6 @@
         clientDashCtrl.user = "";
         clientDashCtrl.keyword = "";
         clientDashCtrl.classes = {};
-
         
         var getAllClasses = function() {
             if (currentUserState == 'clientdash') {
@@ -638,13 +648,10 @@
                         for (var c in clientDashCtrl.classes) {
                             clientDashCtrl.classes[c].class.start_time = moment(clientDashCtrl.classes[c].class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                         };
-                        
                     }).catch(function(err){
                         console.error("Error encountered: ", err);
                     });
             };
-
-
         };
 
         // check that user is logged in, get basic user details 
@@ -772,7 +779,7 @@
                 // call by passing id of class to view
                 ClassSvc.retrieveClassById(classId)
                     .then(function(myClass) {
-                        viewClassCtrl.class =  myClass.data;
+                        viewClassCtrl.class = myClass.data;
                         viewClassCtrl.class.start_time = moment(viewClassCtrl.class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
                     }).catch(function(err) {
                         console.error("Error: ", err);
@@ -792,7 +799,7 @@
         };
 
         viewClassCtrl.deleteClass = function() {
-            ClassSvc.deleteClass(classId)
+            ClassSvc.deleteClass(viewClassCtrl.class.id)
                 .then(function (result) {
                     // a browser box to inform the user, before switching states
                     alert("Class successfully removed");
@@ -812,11 +819,21 @@
         };
 
         viewClassCtrl.bookClass = function() {
-            ClassSvc.bookClass(classId, viewClassCtrl.user.id)
+            ClassSvc.bookClass(viewClassCtrl.class.id, viewClassCtrl.user.id)
                 .then(function(results){
                     viewClassCtrl.message ="Class successfully booked.";
                 }).catch(function(err){
-                    viewClassCtrl.message ="You have booked for this class.";                    
+                    viewClassCtrl.message ="Unable to book you for this class.";                    
+                    console.error("Error encountered: ", err);
+                });
+        };
+
+        viewClassCtrl.cancelBooking = function() {
+            ClassSvc.deleteBooking(viewClassCtrl.class.id, viewClassCtrl.user.id)
+                .then(function(results){
+                    viewClassCtrl.message ="Your booking successfully cancelled.";
+                }).catch(function(err){
+                    viewClassCtrl.message ="Unable to cancel your booking.";                    
                     console.error("Error encountered: ", err);
                 });
         };
