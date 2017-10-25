@@ -850,7 +850,7 @@
         var clientRegCtrl = this;
 
         clientRegCtrl.user = {};
-        clientRegCtrl.message = ""; 
+        clientRegCtrl.message = "";
         clientRegCtrl.user.role = 2;
         clientRegCtrl.user.status = "";
 

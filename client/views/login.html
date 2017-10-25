@@ -3,13 +3,13 @@
     <div class="col-sm-8 col-lg-4">
         <h1 class="brand-light">Log In</h1>
         <hr class="style13">
-        <form name="loginForm" ng-submit="loginCtrl.login()">
+        <form name="loginForm" ng-submit="loginForm.$valid && loginCtrl.login()" novalidate>
             <div class="form-group">
                 <div class="input-group">
                 <div class="input-group-addon">
                 <i class="fa fa-envelope-o"></i> 
                 </div>
-                <input class="form-control" id="email" name="email" type="email" placeholder="Email" ng-model="loginCtrl.user.email"/>
+                <input class="form-control" id="email" name="email" type="email" placeholder="Email" required ng-model="loginCtrl.user.email"/>
                 </div>
             </div>
 
@@ -18,7 +18,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
                 </div>
-                <input class="form-control" id="password" name="password" type="password" placeholder="Password" ng-model="loginCtrl.user.password"/>
+                <input class="form-control" id="password" name="password" type="password" placeholder="Password" required ng-model="loginCtrl.user.password"/>
                 </div>
             </div>
 
@@ -27,6 +27,14 @@
                         <label><input type="checkbox" value="">Remember Me</label>
                 </div> -->
                 <button type="submit" class="btn btn-primary sign-in pull-right loginbtn">Log In</button>
+            </div>
+            <div class="form-group" ng-show="loginForm.$submitted && (loginForm.email.$error.require || loginForm.password.$error.required)">
+                <div class="alert alert-info alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <strong>Email and password required to log in</strong>
+                </div>
             </div>
         </form>
         <div ng-show="loginCtrl.message">{{ loginCtrl.message }}</div>

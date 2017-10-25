@@ -3,13 +3,13 @@
     <div class="col-sm-8 col-lg-4">
         <h1 class="brand-light">Trainer Registration</h1>
         <hr class="style13">
-        <form name="clientForm" ng-submit="trainerRegCtrl.register()">
+        <form name="trainerForm" ng-submit="trainerRegCtrl.register()">
             <div class="form-group">
                 <div class="input-group">
                 <div class="input-group-addon">
                 <i class="fa fa-envelope-o"></i> 
                 </div>
-                <input class="form-control" id="email" name="email" type="email" placeholder="Email" ng-model="trainerRegCtrl.user.email"/>
+                <input class="form-control" id="email" name="email" type="email" placeholder="Email" required ng-model="trainerRegCtrl.user.email"/>
                 </div>
             </div>
 
@@ -18,7 +18,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
                 </div>
-                <input class="form-control" id="password" name="password" type="password" placeholder="Password" ng-model="trainerRegCtrl.user.password"/>
+                <input class="form-control" id="password" name="password" type="password" placeholder="Password" required ng-model="trainerRegCtrl.user.password"/>
                 </div>
             </div>
 
@@ -27,7 +27,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-key"></i> 
                 </div>
-                <input class="form-control" id="password" name="password" type="password" placeholder="Verify Password" ng-model="trainerRegCtrl.user.confirmpassword"/>
+                <input class="form-control" id="confirmpassword" name="confirmpassword" type="password" placeholder="Verify Password" required ng-model="trainerRegCtrl.user.confirmpassword"/>
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-sticky-note"></i> 
                 </div>
-                <input class="form-control" id="firstname" name="firstname" type="text" placeholder="First Name" ng-model="trainerRegCtrl.user.firstname"/>
+                <input class="form-control" id="firstname" name="firstname" type="text" placeholder="First Name" required ng-model="trainerRegCtrl.user.firstname"/>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                 <div class="input-group-addon">
                 <i class="fa fa-sticky-note-o"></i> 
                 </div>
-                <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Last Name" ng-model="trainerRegCtrl.user.lastname"/>
+                <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Last Name" required ng-model="trainerRegCtrl.user.lastname"/>
                 </div>
             </div>
 
@@ -53,6 +53,43 @@
                 <button type="button" class="btn btn-success sign-in pull-left ctreglogbtn" ui-sref="login">Log In</button>
                 <button type="submit" class="btn btn-primary sign-in pull-right ctregregbtn">Register</button>
             </div>
+
+            <!-- validate email format, using angular's built-in validation token -->
+            <div ng-show="trainerForm.email.$touched">
+                <!-- if no email is supplied -->
+                <div ng-show="trainerForm.email.$error.required">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Your email address is required
+                    </div>
+                </div>
+                <!-- reference built-in ng $error.email token if format is correct -->
+                <div data-ng-show="trainerForm.email.$error.email">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Email format is invalid
+                    </div>
+                </div>
+            </div>
+                    
+            <!-- validate passwords supplied -->
+            <div ng-show="trainerForm.password.$touched || trainerForm.confirmpassword.$touched">
+                <!-- if no email is supplied -->
+                <div ng-show="trainerForm.password.$error.required && trainerForm.confirmpassword.$error.required">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Please enter a password
+                    </div>
+                </div>
+                <!-- validate passwords supplied match -->
+                <div ng-show="(trainerForm.password.$dirty && trainerForm.confirmpassword.$dirty)&& (trainerRegCtrl.user.password != trainerRegCtrl.user.confirmpassword)">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                        Please re-key. Your passwords don't match
+                    </div>
+                </div>
+            </div>
+                
         </form>
         <div ng-show="trainerRegCtrl.message">{{ trainerRegCtrl.message }}</div>
     </div>
