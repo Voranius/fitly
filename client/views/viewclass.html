@@ -106,9 +106,9 @@
             </div>
             
             <div class="clearfix"></div>
-            <!-- 4 buttons here, displayed based on role
+            <!-- 5 buttons here, displayed based on role
             if role=trainer, show 'Save' and 'Delete'
-            if role=client, show 'Cancel Booking'
+            if role=client, show 'Book Class' and 'Cancel Booking'
             'Cancel' button returns user back to the role-based dashboard -->
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                 <button type="submit" class="btn btn-block btn-info" ng-show="viewClassCtrl.user.role==1">Save Changes</button>
@@ -118,12 +118,16 @@
                 ng-show="viewClassCtrl.user.role==1"
                 ng-click="viewClassCtrl.deleteClass()">Delete Class</button>
             </div>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <button type="button" class="btn btn-block btn-info" ng-click="viewClassCtrl.cancel()">Back to Dashboard</button>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                 <button type="button" class="btn btn-block btn-success" ng-show="viewClassCtrl.user.role==2"
                 ng-click="viewClassCtrl.bookClass()">Book This Class</button>
             </div>
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <button type="button" class="btn btn-block btn-info" ng-click="viewClassCtrl.cancel()">Back to Dashboard</button>
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <button type="button" class="btn btn-block btn-danger" ng-show="viewClassCtrl.user.role==2"
+                ng-click="viewClassCtrl.cancelBooking()">Cancel Booking</button>
             </div>
         </form>
         <div class="clearfix"></div>
