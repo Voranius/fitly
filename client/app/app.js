@@ -633,11 +633,10 @@
                 ClassSvc.retrieveMyClasses(clientDashCtrl.user.id, clientDashCtrl.keyword)
                     .then(function(classes){
                         clientDashCtrl.classes = classes.data;
+
                         // format SQL DATETIME to correct format on HTML
                         for (var c in clientDashCtrl.classes) {
-                            clientDashCtrl.classes.class[c].start_time = moment(clientDashCtrl.classes.class[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
-                            clientDashCtrl.classes.class[c].createdAt = moment(clientDashCtrl.classes.class[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
-                            clientDashCtrl.classes.class[c].updatedAt = moment(clientDashCtrl.classes.class[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
+                            clientDashCtrl.classes[c].class.start_time = moment(clientDashCtrl.classes[c].class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                         };
                         
                     }).catch(function(err){
@@ -769,15 +768,15 @@
         UserSvc.getUserStatus()
             .then(function(user) {
                 viewClassCtrl.user = user.data.user;
-            }).catch(function(err) {
-                console.error("Error: ", err);
-            });
 
-        // call by passing id of class to view
-        ClassSvc.retrieveClassById(classId)
-            .then(function(myClass) {
-                viewClassCtrl.class =  myClass.data;
-                viewClassCtrl.class.start_time = moment(viewClassCtrl.class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
+                // call by passing id of class to view
+                ClassSvc.retrieveClassById(classId)
+                    .then(function(myClass) {
+                        viewClassCtrl.class =  myClass.data;
+                        viewClassCtrl.class.start_time = moment(viewClassCtrl.class.start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');                
+                    }).catch(function(err) {
+                        console.error("Error: ", err);
+                    });
             }).catch(function(err) {
                 console.error("Error: ", err);
             });

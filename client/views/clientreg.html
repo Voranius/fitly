@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <!-- validate passwords supplied match -->
-                <div ng-show="(clientForm.password.$dirty && clientForm.confirmpassword.$dirty)&& (clientRegCtrl.user.password != clientRegCtrl.user.confirmpassword)">
+                <div ng-show="(clientForm.password.$dirty && clientForm.confirmpassword.$dirty) && (clientRegCtrl.user.password != clientRegCtrl.user.confirmpassword)">
                     <div class="alert alert-danger" role="alert">
                         <span class="glyphicon glyphicon-exclamation-sign"></span>
                         Please re-key. Your passwords don't match
