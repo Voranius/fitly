@@ -398,9 +398,6 @@ hr.style14 {
 
 .trainer-panel {
     margin-top: 20px;
-    margin-left: 15px;
-    margin-right: 12px;
-    width: 500px !important;
 }
 
 .panel-heading {
@@ -417,9 +414,7 @@ hr.style14 {
 }
 
 .pb-back {
-    background-color: blue;
     margin-top: -16px;
-    height: 200px;
 }
 
 .rowdata {
