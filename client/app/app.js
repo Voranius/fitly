@@ -313,7 +313,6 @@
         };
 
         classSvc.deleteBooking = function(classId, clientId) {
-            console.log("Values of classId, clientId: ", classId, clientId);
             return $http({
                 method: 'DELETE',
                 url: '/api/bookings',

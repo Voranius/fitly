@@ -716,12 +716,14 @@ app.post("/api/bookings", function (req, res) {
 // CANCEL one booking
 // Accepts class_id & client_id to cancel booking
 app.delete("/api/bookings", function (req, res) {
-    console.log("value of class_id & client_id: ", req.params.classId, req.params.clientId);
+    var classId = parseInt(req.query.classId);
+    var clientId = parseInt(req.query.clientId);
+
     Transaction.destroy({
         // soft delete; check deleteAt column for timestamp
         where: {$and: [
-            {class_id: req.params.classId},
-            {client_id: req.params.clientId}
+            {class_id: classId},
+            {client_id: clientId}
         ]}
     })
         .then(function(result){
