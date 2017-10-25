@@ -15,7 +15,7 @@
       
 <div class="container">
     <div class="row">
-        <form name="addClassForm" #addClassForm="ngForm" ng-submit="addClassCtrl.addClass()">
+        <form name="addClassForm" ng-submit="addClassForm.$valid && addClassCtrl.addClass()">
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="classname">Class Name</label>
                 <input class="form-control" id="classname" name="classname" type="text" placeholder="Class Name" required ng-model="addClassCtrl.class.name"/>
@@ -49,6 +49,14 @@
                 <input class="form-control" id="addrname" name="addrname" type="text" placeholder="Name of Location (e.g. Studio or Gym name)" required ng-model="addClassCtrl.class.addr_name"/>
             </div>
 
+            <!-- ensure that a class category is picked -->
+            <div ng-show="addClassForm.$submitted && addClassForm.category.$pristine">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    Please select a fitness category for your class
+                </div>
+            </div>
+
             <div class="clearfix"></div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="address1">Address</label>
@@ -78,15 +86,6 @@
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
-                <!-- {{addClassCtrl.class.start_time}} -->
-                <!-- <div>
-                    <input class="form-control" id='datetimepicker' name="datetime" type="text" required datetimez="datePickerOptions" ng-model="addClassCtrl.class.start_time"/>
-                </div>
-                <script type="text/javascript">
-                    $(function () {
-                        $('#datetimepicker').datetimepicker();
-                    });
-                </script> -->
             </div>
             <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 <label for="duration">Duration of Class (in minutes)</label>
@@ -96,11 +95,11 @@
             <div class="clearfix"></div>
             <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <label for="minsize">Minimum Class Size</label>
-                <input class="form-control" id="minsize" name="minsize" type="number" ng-init="addClassCtrl.class.minsize=1" min="1" max="100" required ng-model="addClassCtrl.class.minsize"/>
+                <input class="form-control" id="minsize" name="minsize" type="number" min="1" max="100" required ng-model="addClassCtrl.class.minsize" ng-init="addClassCtrl.class.minsize=1"/>
             </div>
             <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <label for="maxsize">Maximum Class Size</label>
-                <input class="form-control" id="maxsize" name="maxsize" type="number" ng-init="addClassCtrl.class.maxsize=1" min="1" max="100" required ng-model="addClassCtrl.class.maxsize"/>
+                <input class="form-control" id="maxsize" name="maxsize" type="number" min="1" max="100" required ng-model="addClassCtrl.class.maxsize" ng-init="addClassCtrl.class.maxsize=1"/>
             </div>
             <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <label for="category">Class Status</label>
@@ -111,6 +110,30 @@
                     <option>Inactive</option>
                 </select>
             </div>
+
+            <!-- validate min/max class sizes -->
+            <!-- if no min/max class size figures are supplied -->
+            <div ng-show="addClassForm.minsize.$error.required && addClassForm.maxsize.$error.required">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    Please indicate the minimum and maximum number students you will accept
+                </div>
+            </div>
+            <!-- validate that minsize is NOT greater than maxsize -->
+            <div ng-show="addClassCtrl.class.minsize > addClassCtrl.class.maxsize">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    Minimum number cannot be bigger than your maximum class size
+                </div>
+            </div>
+            <!-- ensure that a class status is picked -->
+            <div ng-show="addClassForm.$submitted && addClassForm.status.$pristine">
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                    Please indicate a status for your class
+                </div>
+            </div>
+
             <div class="clearfix"></div>
             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <label for="remarks">Remarks</label>
