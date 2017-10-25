@@ -618,12 +618,14 @@
                 ClassSvc.retrieveAllClasses(clientDashCtrl.keyword)
                     .then(function(classes){
                         clientDashCtrl.classes = classes.data;
+
                         // format SQL DATETIME to correct format on HTML
                         for (var c in clientDashCtrl.classes) {
                             clientDashCtrl.classes[c].start_time = moment(clientDashCtrl.classes[c].start_time).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                             clientDashCtrl.classes[c].createdAt = moment(clientDashCtrl.classes[c].createdAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                             clientDashCtrl.classes[c].updatedAt = moment(clientDashCtrl.classes[c].updatedAt).utcOffset('+08:00').format('YYYY-MM-DD hh:mm A');
                         };
+                        
                     }).catch(function(err){
                         console.error("Error encountered: ", err);
                     });

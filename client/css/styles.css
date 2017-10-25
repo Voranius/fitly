@@ -73,8 +73,8 @@ h4 {
 }
 
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    min-width: 200px;
+    max-width: 200px;
     background: #2F323A;
     color: #fff;
     transition: all 0.3s;
@@ -400,6 +400,7 @@ hr.style14 {
     margin-top: 20px;
     margin-left: 15px;
     margin-right: 12px;
+    width: 500px !important;
 }
 
 .panel-heading {
@@ -413,6 +414,16 @@ hr.style14 {
 
 .panel-footer {
     background-color: #E5ECE9 !important;
+}
+
+.pb-back {
+    background-color: blue;
+    margin-top: -16px;
+    height: 200px;
+}
+
+.rowdata {
+    margin-top: 15px;
 }
 
 /* ---------------------------------------------------

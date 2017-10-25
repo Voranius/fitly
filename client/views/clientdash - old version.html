@@ -44,47 +44,53 @@
     </div>
 
     <!-- Display list of trainer classes -->
-    <div class="row">
-        <div class="col-lg-4" ng-repeat="class in clientDashCtrl.classes">
-            <div class="panel panel-primary trainer-panel">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-lg-7">
-                            <b>{{class.name}}</b>
-                        </div>
-                        <div class="col-lg-5">
-                            <b>Category:</b> {{class.category}}
-                        </div>
-                        
+    <div class="row" ng-repeat="class in clientDashCtrl.classes">
+        
+        <div class="panel panel-primary trainer-panel">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <b>{{class.name}}</b>
+                    </div>
+                    <div class="col-lg-6">
+                        <button type="button" class="btn btn-default btn-xs pull-right" ng-click="clientDashCtrl.viewClass(class.id)"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
                     </div>
                 </div>
-            
-                <div class="panel-body">
-                    <div class="row pb-back">
-                        <img ng-src="../images/crossfit.jpg" width="498" height="200" ng-show="class.category == 'Crossfit'">
-                        <img ng-src="../images/core.jpg" width="498" height="200" ng-show="class.category == 'Core'">
-                        <img ng-src="../images/mma.jpg" width="498" height="200" ng-show="class.category == 'MMA'">
-                        <img ng-src="../images/boxing.jpg" width="498" height="200" ng-show="class.category == 'Boxing'">
-                        <img ng-src="../images/weights.jpg" width="498" height="200" ng-show="class.category == 'Weights'">
-                        <img ng-src="../images/aerobics.jpg" width="498" height="200" ng-show="class.category == 'Aerobics'">
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Details:</b> {{class.details}}
                     </div>
-                    <div class="row rowdata">
-                        <div class="col-lg-7">
-                            <b>Date/Time:</b> {{class.start_time}}
-                        </div>
-                        <div class="col-lg-5">
-                            <b>District:</b> {{class.neighbourhood}}
-                        </div>
+                    <div class="col-lg-4">
+                        <b>Category:</b> {{class.category}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Class Size (Min/Max):</b> {{class.minsize}}/{{class.maxsize}}
                     </div>
                 </div>
-                <div class="panel-footer">
-                    <div class="row">
-                        <div class="col-lg-7">
-                            <b>Status:</b> {{class.status}}
-                        </div>
-                        <div class="col-lg-5">
-                            <button type="button" class="btn btn-default btn-xs pull-left" ng-click="clientDashCtrl.viewClass(class.id)"><span class="glyphicon glyphicon-eye-open"></span> View Class Details</button>
-                        </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Date/Time:</b> {{class.start_time}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Duration (minutes):</b> {{class.duration}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>District:</b> {{class.neighbourhood}}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <b>Status:</b> {{class.status}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Created:</b> {{class.createdAt}}
+                    </div>
+                    <div class="col-lg-4">
+                        <b>Updated:</b> {{class.updatedAt}}
                     </div>
                 </div>
             </div>
