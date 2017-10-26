@@ -9,8 +9,7 @@
 </nav>
 
 <div>
-    <h3 class="sah4">Manage Your Classes</h3>
-    <h4 class="sah4">Trainer Panel</h4>
+    <h4 class="sah4">Manage Your Classes</h4>
 </div>
 
 <div class="container-fluid"></div>
@@ -46,12 +45,9 @@
             <div class="panel panel-primary trainer-panel">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12 classname">
                             <b>{{class.name}}</b>
                         </div>
-                        <div class="col-lg-6">
-                            <b>Category:</b> {{class.category}}
-                        </div>                               
                     </div>
                 </div>
                     
@@ -69,7 +65,9 @@
                             <b>Date/Time:</b> <br>{{class.start_time}}
                         </div>
                         <div class="col-lg-6">
-                            <b>Students:</b> {{class.bookingCount}} / {{class.maxsize}}
+                            <b>Bookings:</b> {{class.bookingCount}} / {{class.minsize}}
+                            <br>
+                            <b>Category:</b> {{class.category}}
                         </div>
                     </div>
                 </div>
