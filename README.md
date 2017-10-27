@@ -14,10 +14,13 @@ Fitly provides choice of personal fitness providers to consumers based on:
 
 To personal fitness providers, Fitly provides a centralised tool to create and publicise classes.
 
-## Features of Fitly
-* Feature 1
-* Feature 2
-* Feature 3
+## Capabilities implemented from FSF course
+* Authentication - login and checking user login status
+* CRUD - interacting with database using sequelize (search, retrieve, add, delete, update)
+* Advanced HTML and CSS, with AngularJS data-binding features
+* Form validation - checking both at front-end HTML and server-side
+* Switching states, views and controllers
+* Services used by multiple controllers
 
 ## ID and password for Admin access to system
 Email: q@q
