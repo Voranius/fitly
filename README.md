@@ -23,6 +23,14 @@ To personal fitness providers, Fitly provides a centralised tool to create and p
 * Services used by multiple controllers
 * Server-side APIs for a consistent and stateless method for client-server interaction 
 
+## Reflections by the authors
+* First-hand experience of what it takes to be a developer
+* Intensive but effective course curriculum
+* Sense of achievement, empowerment
+* Cloud deployment was systematic & can be automated
+* Two-way data binding is a powerful concept
+* Shared peer experiences, strong camaraderie, even with instructors
+
 ## ID and password for Admin access to system
 Email: q@q
 Password: 1234
