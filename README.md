@@ -21,6 +21,7 @@ To personal fitness providers, Fitly provides a centralised tool to create and p
 * Form validation - checking both at front-end HTML and server-side
 * Switching states, views and controllers
 * Services used by multiple controllers
+* Server-side APIs for a consistent and stateless method for client-server interaction 
 
 ## ID and password for Admin access to system
 Email: q@q
