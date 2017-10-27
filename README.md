@@ -22,6 +22,7 @@ To personal fitness providers, Fitly provides a centralised tool to create and p
 * Switching states, views and controllers
 * Services used by multiple controllers
 * Server-side APIs for a consistent and stateless method for client-server interaction 
+* Database JOIN, where we retrieve data from three (3) tables of information
 
 ## Reflections by the authors
 * First-hand experience of what it takes to be a developer
