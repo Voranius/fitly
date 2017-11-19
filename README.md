@@ -2,7 +2,7 @@
 ### Connecting health-conscious consumers to fitness providers
 An NUS-ISS Full Stack Foundation course project
 
-##Project members
+## Project members
 * Nick Sabai nicksabai@gmail.com
 * Tan Cheen Chong cheen@genii-group.com
 
@@ -32,8 +32,15 @@ To personal fitness providers, Fitly provides a centralised tool to create and p
 * Two-way data binding is a powerful concept
 * Shared peer experiences, strong camaraderie, even with instructors
 
-## ID and password for Admin access to system
-Email: q@q
-Password: 1234
+## Technologies used
+* HTML5
+* CSS3
+* JavaScript
+* AngularJS
+* Express.js
+* Node JS
+* Bootstrap 3
+* MySQL
+
 
 
