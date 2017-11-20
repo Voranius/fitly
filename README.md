@@ -56,3 +56,9 @@ Client Login
 Trainer Login
 * Login: mohdnoor@wreck.com
 * Password: wreck1234
+
+## Features to be added
+* Booking Notifications
+* FAQ Page
+* Payment Module
+* User Profile Photo Upload
