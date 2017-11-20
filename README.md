@@ -42,5 +42,17 @@ To personal fitness providers, Fitly provides a centralised tool to create and p
 * Bootstrap 3
 * MySQL
 
+## Live Implementation on AWS
+[AWS Link](http://ec2-54-169-166-15.ap-southeast-1.compute.amazonaws.com:3000)
 
+Admin Login
+* Email: q@q
+* Password: 1234
 
+Client Login
+* Email: george@costanza.com
+* Password: george1234
+
+Trainer Login
+* Login: mohdnoor@wreck.com
+* Password: wreck1234
